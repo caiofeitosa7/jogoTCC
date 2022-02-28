@@ -7,8 +7,6 @@ pygame.init()
 pos_inicial = (385, 380)
 p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], file = '')
 
-# px = 385           # posição x do personagem
-# py = 380           # posição y do personagem
 width = 697           # largura da janela
 heigth = 490           # altura da janela
 sala_atual = 0         # em que sala o personagem está
@@ -148,13 +146,13 @@ def atualiza_cenario():
 
 
                                                                         # TODO
-def label_direcao():
-    global font_size
-    
-    if py <= lim_superior + 110:
-        d = 'DIREITA'
-        e = 'ESQUERDA'
-        label_pontos = fonte.render(label, True, (255, 255, 255))
+# def label_direcao():
+#     global font_size
+#     
+#     if py <= lim_superior + 110:
+#         d = 'DIREITA'
+#         e = 'ESQUERDA'
+#         label_pontos = fonte.render(label, True, (255, 255, 255))
 
 
 # # abre a porta
@@ -202,7 +200,7 @@ while janela_aberta:
     
     
     
-    label_direcao()
+#     label_direcao()
     
     
     
@@ -215,10 +213,13 @@ while janela_aberta:
     # cenário
     janela.blit(fundo, (0, inicio_fundo))
     janela.blit(calabouco2, (0, inicio_fundo - 1260))
-    janela.blit(fundo_placar, (lim_lateral + 8, 0))
+    janela.blit(fundo_placar, (lim_lateral + 7, 0))
     
     # personagem
-    janela.blit(p1.sprite_atual, (p1.x, p1.y))
+    janela.blit(p1.sprite_atual, (p1.x, p1.y))    
+        
+    janela.blit(label_pontos, (lim_lateral + 30, lim_superior + 50))
+    
     print(p1.x, p1.y)
     
     
@@ -239,7 +240,10 @@ while janela_aberta:
     
     
     
-        
-    janela.blit(label_pontos, (lim_lateral + 30, lim_superior + 30))
+    
+    
+    
+    
+    
     pygame.display.update()        
 pygame.quit()
