@@ -10,12 +10,12 @@ class Personagem:
     
     indices = {'cima': 0, 'baixo': 0, 'direita': 0, 'esquerda': 0}
     
-    def __init__(self, x: int, y: int, path = 'Sprites Personagem'):
+    def __init__(self, x: int, y: int, path = 'Personagens\p1'):
         self.__x = x
         self.__y = y
         self.x_anterior = x
         self.y_anterior = y
-        self.__velocidade = 7
+        self.__velocidade = 8
         self.__path = path
         self.frame_frente = True
         

@@ -1,8 +1,11 @@
 import os
 import pygame
+from pygame import mixer
 from jogador import Personagem
 
+
 pygame.init()
+mixer.init()
 
 DELAY = 80
 MENU = True
@@ -21,30 +24,27 @@ dir_jogador = []                      # direcao que o jogador seguiu em cada sal
 sala_atual = len(dir_jogador)         # em que sala o personagem está
 bg = 0                                # background atual
 
-pygame.display.set_caption("King")
+pygame.display.set_caption("Lost Kingdom")
 janela = pygame.display.set_mode((WIDTH, HEIGHT))
-
-pos_inicial = (LIM_LATERAL/2 - 30, 360)
-p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\p1')
-
-
-# x = LIM_LATERAL - 130
-
-
-#inimigos
-inimigo = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR + 40, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
-# dragao = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
-# orc = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 
 PATH_MAPA = 'mapas2'
 fundo_placar = pygame.image.load(r'mapas\terra.png')
+
+pos_inicial = (LIM_LATERAL/2 - 30, 360)
+p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], path = r'Personagens\p1')
+
+
+#inimigos
+inimigo = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR - 37, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
+# dragao = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
+# orc = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 
 # variaveis de pontuação
 pontos = 0
 fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
 fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
 
-# carregando sprites do cenário com a porta esquerda aberta
+# carregando sprites do cenário
 mapas = []
 caminho = PATH_MAPA + '\\'
 files = os.listdir(caminho)
@@ -53,11 +53,19 @@ mapas = [pygame.image.load(caminho + file) for file in sorted(files)]
 fundo = mapas[bg]
 
 
-# Carregando menus
-menu = pygame.image.load(r'menu\menu_principal.png')
-jogar_hover = pygame.image.load(r'menu\jogar_hover.png')
-personagem_hover = pygame.image.load(r'menu\personagem_hover.png')
-sair_hover = pygame.image.load(r'menu\sair_hover.png')
+# Carregando imagens do menu de personagens
+menu_personagens = []
+caminho = r'menu\menuPersonagens' + '\\'
+files = os.listdir(caminho)
+menu_personagens = [pygame.image.load(caminho + file) for file in sorted(files)]
+
+# menu = pygame.image.load(r'menu\menu_principal.png')
+# jogar_hover = pygame.image.load(r'menu\jogar_hover.png')
+# personagem_hover = pygame.image.load(r'menu\personagem_hover.png')
+# sair_hover = pygame.image.load(r'menu\sair_hover.png')
+
+# Carregando sons do jogo
+audio_click = pygame.mixer.Sound(r"sounds\Click.mp3")
 
 
 def colidir(ax: float, ay: float, aComp: float, aAlt: float, bx: float, by: float, bComp: float, bAlt: float):
@@ -72,7 +80,13 @@ def colidir(ax: float, ay: float, aComp: float, aAlt: float, bx: float, by: floa
 
     return True
     
-        
+
+# posiciona inimigo no mapa jogavel
+def posiciona_inimigo():
+    for i in range(8):
+        inimigo.movimenta('b')
+    
+    
 # movimentacao do inimigo
 def movimenta_inimigo():
     dif_y = abs(inimigo.y - p1.y) > 70
@@ -93,7 +107,8 @@ def movimenta_personagem(comandos):
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
     elif comandos[pygame.K_DOWN]:
-        p1.movimenta('b')
+        if not p1.y + 50 >= 490:
+            p1.movimenta('b')
     elif comandos[pygame.K_RIGHT]:
         p1.movimenta('d')
     elif comandos[pygame.K_LEFT]:
@@ -204,41 +219,65 @@ def atualiza_cenario():
     gerencia_mapa()
     sala_atual = len(dir_jogador)
     p1.y = pos_inicial[1]
-    
 
+
+personagem_selec = 1
+path_personagem = 'p1'
 
 # click button
-def botao_clicado():
-    global MENU
-    x, y = pygame.mouse.get_pos()
+def botao_clicado_menu():
+    global MENU, menu_personagens, personagem_selec, p1, path_personagem
     
-    if (y >= 163 and y <= 205) and (x >= 261 and x <= 440):
+    x, y = pygame.mouse.get_pos()
+    pos_click_horizontal = y >= 200 and y <= 259
+    
+    if pos_click_horizontal:
+        if x >= 203 and x <= 262:
+            audio_click.play()
+            janela.blit(menu_personagens[0], (0, 0))
+            path_personagem = 'p1'
+            personagem_selec = 1
+            
+        elif x >= 281 and x <= 341:
+            audio_click.play()
+            janela.blit(menu_personagens[1], (0, 0))
+            path_personagem = 'p2'
+            personagem_selec = 2
+            
+        elif x >= 261 and x <= 421:
+            audio_click.play()
+            janela.blit(menu_personagens[2], (0, 0))
+            path_personagem = 'p3'
+            personagem_selec = 3
+            
+        elif x >= 439 and x <= 500:
+            audio_click.play()
+            janela.blit(menu_personagens[3], (0, 0))
+            path_personagem = 'p4'
+            personagem_selec = 4
+            
+    if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):
         MENU = False
-    elif (y >= 231 and y <= 273) and (x >= 261 and x <= 440):
-        pass
-#         escolhe_personagem()
-        
-    elif (y >= 298 and y <= 340) and (x >= 261 and x <= 440):
-        pygame.quit()
-        exit()
-
+        audio_click.play()
+        pos_inicial = (LIM_LATERAL/2 - 30, 360)
+        p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], path = 'Personagens\\' + path_personagem)
 
 
 # menu principal
 def menu_principal():
-    global MENU, menu
+    global MENU, menu_personagens, personagem_selec
     
     MENU = True
     x, y = pygame.mouse.get_pos()
     
-    if (y >= 163 and y <= 205) and (x >= 261 and x <= 440):
-        janela.blit(jogar_hover, (0, 0))
-    elif (y >= 231 and y <= 273) and (x >= 261 and x <= 440):
-        janela.blit(personagem_hover, (0, 0))
-    elif (y >= 298 and y <= 340) and (x >= 261 and x <= 440):
-        janela.blit(sair_hover, (0, 0))
+    if personagem_selec == 1:
+        janela.blit(menu_personagens[0], (0, 0))
+    elif personagem_selec == 2:
+        janela.blit(menu_personagens[1], (0, 0))
+    elif personagem_selec == 3:
+        janela.blit(menu_personagens[2], (0, 0))
     else:
-        janela.blit(menu, (0, 0))
+        janela.blit(menu_personagens[3], (0, 0))
     
     
 
@@ -256,7 +295,7 @@ def jogar():
                 rodando = False
             
             if event.type == pygame.MOUSEBUTTONDOWN:
-                botao_clicado()
+                botao_clicado_menu()
         
         if not MENU:
             label = f'Pontos: {pontos}'
@@ -309,8 +348,6 @@ def jogar():
         
         
        
-        
-        
 if __name__ == '__main__':
     jogar()
     
