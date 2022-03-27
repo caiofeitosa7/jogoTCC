@@ -15,7 +15,7 @@ class Personagem:
         self.__y = y
         self.x_anterior = x
         self.y_anterior = y
-        self.__velocidade = 8
+        self.__velocidade = 25
         self.__path = path
         self.frame_frente = True
         

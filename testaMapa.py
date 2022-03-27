@@ -1,22 +1,13 @@
 import os
 import pygame
+from constantes import *
 from pygame import mixer
 from jogador import Personagem
-
 
 pygame.init()
 mixer.init()
 
-DELAY = 80
-MENU = True
-FONT = 'PressStart2P-Regular'
-FONT_SIZE = 17
-DESLOCA_MAPA = 510
-WIDTH = 700           # largura da janela
-HEIGHT = 500          # altura da janela
-LIM_SUPERIOR = 20
-LIM_LATERAL = 500     # limite a direita
-y_fundo = - DESLOCA_MAPA
+y_fundo = - DESLOCA_MAPA + ESPACO_ENTRE_MAPAS
 x_fundo = 0
 dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
                ('ESQUERDA', 'DIREITA', 'ESQUERDA'), ('DIREITA', 'ESQUERDA', 'DIREITA')]    # direcoes corretas de cada calabouço
@@ -24,18 +15,19 @@ dir_jogador = []                      # direcao que o jogador seguiu em cada sal
 sala_atual = len(dir_jogador)         # em que sala o personagem está
 bg = 0                                # background atual
 
+# criando a janela
 pygame.display.set_caption("Lost Kingdom")
 janela = pygame.display.set_mode((WIDTH, HEIGHT))
 
-PATH_MAPA = 'mapas2'
+PATH_MAPA = 'mapas3'
 fundo_placar = pygame.image.load(r'mapas\terra.png')
 
-pos_inicial = (LIM_LATERAL/2 - 30, 360)
+pos_inicial = (LIM_LATERAL/2 - 15, 360)
 p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], path = r'Personagens\p1')
 
 
 #inimigos
-inimigo = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR - 37, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
+inimigo = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
 # dragao = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 # orc = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 
@@ -163,48 +155,49 @@ def pontua():
         pontos += 3
         
         
-        
 troca_mapa = 0
 def gerencia_mapa():
     global troca_mapa, dir_jogador, y_fundo, x_fundo, DESLOCA_MAPA, bg
     
+    deslocamento = DESLOCA_MAPA - ESPACO_ENTRE_MAPAS
+    
     if escolheu_direita():
         dir_jogador.append('DIREITA')
-        p1.x = 50
+        p1.x = 40
         
         if troca_mapa == 1:
             x_fundo = - DESLOCA_MAPA
-            y_fundo = - DESLOCA_MAPA
+            y_fundo = - deslocamento
             
         if troca_mapa == 2:
             bg += 1
-            if dir_jogador[sala_atual - 1] == 'DIREITA':
+            if dir_jogador[sala_atual - 1] == 'DIREITA': # verifica qual opcao a pessoa tinha escolhido na sala anterior
                 x_fundo = - DESLOCA_MAPA
-                y_fundo = - DESLOCA_MAPA
+                y_fundo = - deslocamento
             else:
                 x_fundo = - DESLOCA_MAPA
-                y_fundo = 0
+                y_fundo = ESPACO_ENTRE_MAPAS
                 
     else:
         dir_jogador.append('ESQUERDA')
-        p1.x = LIM_LATERAL - 130
+        p1.x = LIM_LATERAL - 70
         
         if troca_mapa == 1:
-            y_fundo = 0
             x_fundo = 0
+            y_fundo = ESPACO_ENTRE_MAPAS
             
         if troca_mapa == 2:
             bg += 1
-            if dir_jogador[sala_atual - 1] == 'DIREITA':
+            if dir_jogador[sala_atual - 1] == 'DIREITA': # verifica qual opcao a pessoa tinha escolhido na sala anterior
                 x_fundo = 0
-                y_fundo = - DESLOCA_MAPA
+                y_fundo = - deslocamento
             else:
                 x_fundo = 0
-                y_fundo = 0
+                y_fundo = ESPACO_ENTRE_MAPAS
             
     if troca_mapa == 3:
         x_fundo = 0
-        y_fundo = - DESLOCA_MAPA
+        y_fundo = - deslocamento
         troca_mapa = 0
         bg += 1
         p1.x = pos_inicial[0]
@@ -221,12 +214,11 @@ def atualiza_cenario():
     p1.y = pos_inicial[1]
 
 
-personagem_selec = 1
 path_personagem = 'p1'
 
 # click button
 def botao_clicado_menu():
-    global MENU, menu_personagens, personagem_selec, p1, path_personagem
+    global MENU, menu_personagens, p1, path_personagem, pos_inicial
     
     x, y = pygame.mouse.get_pos()
     pos_click_horizontal = y >= 200 and y <= 259
@@ -234,53 +226,43 @@ def botao_clicado_menu():
     if pos_click_horizontal:
         if x >= 203 and x <= 262:
             audio_click.play()
-            janela.blit(menu_personagens[0], (0, 0))
             path_personagem = 'p1'
-            personagem_selec = 1
             
         elif x >= 281 and x <= 341:
             audio_click.play()
-            janela.blit(menu_personagens[1], (0, 0))
-            path_personagem = 'p2'
-            personagem_selec = 2
+            path_personagem = 'p3'
             
         elif x >= 261 and x <= 421:
             audio_click.play()
-            janela.blit(menu_personagens[2], (0, 0))
-            path_personagem = 'p3'
-            personagem_selec = 3
+            path_personagem = 'p2'
             
         elif x >= 439 and x <= 500:
             audio_click.play()
-            janela.blit(menu_personagens[3], (0, 0))
             path_personagem = 'p4'
-            personagem_selec = 4
             
     if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):
         MENU = False
         audio_click.play()
-        pos_inicial = (LIM_LATERAL/2 - 30, 360)
         p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], path = 'Personagens\\' + path_personagem)
 
 
 # menu principal
 def menu_principal():
-    global MENU, menu_personagens, personagem_selec
+    global MENU, menu_personagens, path_personagem
     
     MENU = True
     x, y = pygame.mouse.get_pos()
     
-    if personagem_selec == 1:
+    if path_personagem == 'p1':
         janela.blit(menu_personagens[0], (0, 0))
-    elif personagem_selec == 2:
-        janela.blit(menu_personagens[1], (0, 0))
-    elif personagem_selec == 3:
+    elif path_personagem == 'p2':
         janela.blit(menu_personagens[2], (0, 0))
+    elif path_personagem == 'p3':
+        janela.blit(menu_personagens[1], (0, 0))
     else:
         janela.blit(menu_personagens[3], (0, 0))
     
     
-
 def jogar():
     global MENU, menu
     
@@ -294,8 +276,9 @@ def jogar():
             if event.type == pygame.QUIT:
                 rodando = False
             
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                botao_clicado_menu()
+            if MENU:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    botao_clicado_menu()
         
         if not MENU:
             label = f'Pontos: {pontos}'
