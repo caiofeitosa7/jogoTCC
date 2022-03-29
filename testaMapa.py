@@ -4,6 +4,8 @@ from constantes import *
 from pygame import mixer
 from jogador import Personagem
 
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+
 pygame.init()
 mixer.init()
 
@@ -17,11 +19,11 @@ bg = 0                                # background atual
 
 # criando a janela
 pygame.display.set_caption("Lost Kingdom")
-janela = pygame.display.set_mode((WIDTH, HEIGHT))
+janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 
 PATH_MAPA = 'mapas3'
 fundo_placar = pygame.image.load(r'mapas\terra.png')
-
+cobre_sobra_mapa = pygame.image.load(r'mapas\terra2.png')
 pos_inicial = (LIM_LATERAL/2 - 15, 360)
 p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], path = r'Personagens\p1')
 
@@ -176,7 +178,7 @@ def gerencia_mapa():
                 y_fundo = - deslocamento
             else:
                 x_fundo = - DESLOCA_MAPA
-                y_fundo = ESPACO_ENTRE_MAPAS
+                y_fundo = - ESPACO_ENTRE_MAPAS
                 
     else:
         dir_jogador.append('ESQUERDA')
@@ -184,7 +186,7 @@ def gerencia_mapa():
         
         if troca_mapa == 1:
             x_fundo = 0
-            y_fundo = ESPACO_ENTRE_MAPAS
+            y_fundo = - ESPACO_ENTRE_MAPAS
             
         if troca_mapa == 2:
             bg += 1
@@ -193,7 +195,7 @@ def gerencia_mapa():
                 y_fundo = - deslocamento
             else:
                 x_fundo = 0
-                y_fundo = ESPACO_ENTRE_MAPAS
+                y_fundo = - ESPACO_ENTRE_MAPAS
             
     if troca_mapa == 3:
         x_fundo = 0
@@ -232,7 +234,7 @@ def botao_clicado_menu():
             audio_click.play()
             path_personagem = 'p3'
             
-        elif x >= 261 and x <= 421:
+        elif x >= 360 and x <= 421:
             audio_click.play()
             path_personagem = 'p2'
             
@@ -276,6 +278,10 @@ def jogar():
             if event.type == pygame.QUIT:
                 rodando = False
             
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_END:
+                    rodando = False
+                    
             if MENU:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     botao_clicado_menu()
@@ -297,6 +303,9 @@ def jogar():
             # cenário
             janela.blit(fundo, (x_fundo, y_fundo))
             janela.blit(fundo_placar, (LIM_LATERAL + 8, 0))
+#             janela.blit(fundo_placar, (0, 0))
+            janela.blit(cobre_sobra_mapa, (0, HEIGHT))
+
             
             # personagem
             if not colidir(p1.y, p1.x, 35, 48, inimigo.y, inimigo.x, 32, 57):
