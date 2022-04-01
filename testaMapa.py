@@ -100,23 +100,55 @@ def movimenta_inimigo():
         
 # movimentacao do personagem
 def movimenta_personagem(comandos):
-    w = p1.largura
+    global troca_mapa
     h = p1.altura
+    w = p1.largura
+    pode_baixo = True
+    pode_direita = True
+    pode_esquerda = True
     
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
-        if troca_mapa == 0 and (p1.x + w > 108 and p1.x < 501) and p1.y < LIM_SUPERIOR:
+        
+        if (p1.x + w > 108 and p1.x < 501) and p1.y < LIM_SUPERIOR:
             p1.movimenta('b')
-        
-        
         
     elif comandos[pygame.K_DOWN]:
-        if not p1.y + 50 >= 490:
-            p1.movimenta('b')
+        p1.movimenta('b')
+        
+        if troca_mapa == 0:
+            if p1.y + h >= 472 \
+            or (p1.x <= 196 or p1.x + w >= 413) and p1.y + h >= 291:
+                p1.movimenta('c')
+        else:
+            pass
+            
     elif comandos[pygame.K_RIGHT]:
         p1.movimenta('d')
+        
+        if p1.x + w >= 596:
+            p1.movimenta('e')
+            
+        elif troca_mapa == 0:
+            if p1.x + w >= 412 and p1.y + h >= 291:
+                p1.movimenta('e')
+        
+        else:
+            pass
+            
+        
     elif comandos[pygame.K_LEFT]:
         p1.movimenta('e')
+        
+        if p1.x + w <= 45:
+            p1.movimenta('d')
+            
+        elif troca_mapa == 0:
+            if p1.x + w <= 225 and p1.y + h >= 291:
+                p1.movimenta('d')
+        
+        else:
+            pass
         
 
 # função que verifica se o personagem foi pela direita
@@ -264,7 +296,7 @@ def menu_principal():
 def jogar():
     global MENU, menu
     
-    direcoes = 'ESQUERDA          DIREITA'
+    direcoes = 'ESQUERDA                    DIREITA'
     rodando = True
     
     while rodando:
@@ -298,8 +330,7 @@ def jogar():
             
             # cenário
             janela.blit(fundo, (x_fundo, y_fundo))
-            janela.blit(fundo_placar, (LIM_LATERAL + 8, 0))
-#             janela.blit(fundo_placar, (0, 0))
+            janela.blit(fundo_placar, (LIM_LATERAL + 10, 0))
             janela.blit(cobre_sobra_mapa, (0, HEIGHT))
 
             
@@ -315,8 +346,8 @@ def jogar():
             
             # labels
             if p1.y <= LIM_SUPERIOR + 90:
-                label_direcoes = fonte_dir.render(direcoes, True, (255, 0, 0))
-                janela.blit(label_direcoes, (LIM_LATERAL - 430, LIM_SUPERIOR + 35))
+                label_direcoes = fonte_dir.render(direcoes, True, (255, 255, 255))
+                janela.blit(label_direcoes, (LIM_LATERAL - 540, LIM_SUPERIOR + 35))
             
             janela.blit(label_pontos, (LIM_LATERAL + 30, LIM_SUPERIOR + 30))
         else:
