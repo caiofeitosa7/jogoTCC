@@ -4,7 +4,7 @@ from constantes import *
 from pygame import mixer
 from jogador import Personagem
 
-os.environ['SDL_VIDEO_CENTERED'] = '1'
+troca_mapa = 0
 
 pygame.init()
 mixer.init()
@@ -24,12 +24,14 @@ janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 PATH_MAPA = 'mapas3'
 fundo_placar = pygame.image.load(r'mapas\terra.png')
 cobre_sobra_mapa = pygame.image.load(r'mapas\terra2.png')
+
+
 pos_inicial = (LIM_LATERAL/2 - 15, 360)
-p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], path = r'Personagens\p1')
+p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, path = r'Personagens\p1')
 
 
 #inimigos
-inimigo = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
+inimigo = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 0, altura = 0, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
 # dragao = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 # orc = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 
@@ -83,7 +85,7 @@ def posiciona_inimigo():
     
 # movimentacao do inimigo
 def movimenta_inimigo():
-    dif_y = abs(inimigo.y - p1.y) > 70
+    dif_y = abs(inimigo.y - p1.y) > 50
     dif_x = abs(inimigo.x - p1.x) > 20
     
     if inimigo.x <= p1.x and dif_x:    # RIGHT
@@ -98,8 +100,16 @@ def movimenta_inimigo():
         
 # movimentacao do personagem
 def movimenta_personagem(comandos):
+    w = p1.largura
+    h = p1.altura
+    
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
+        if troca_mapa == 0 and (p1.x + w > 108 and p1.x < 501) and p1.y < LIM_SUPERIOR:
+            p1.movimenta('b')
+        
+        
+        
     elif comandos[pygame.K_DOWN]:
         if not p1.y + 50 >= 490:
             p1.movimenta('b')
@@ -108,20 +118,6 @@ def movimenta_personagem(comandos):
     elif comandos[pygame.K_LEFT]:
         p1.movimenta('e')
         
-
-# # movimentacao do personagem
-# def movimenta_personagem(comandos):
-#     if comandos[pygame.K_UP]:
-#         if (p1.y >= LIM_SUPERIOR + 40) and (p1.x <= 163 and p1.x + 85 >= 325):
-#             p1.movimenta('c')
-#     elif comandos[pygame.K_DOWN]:
-#         if (p1.y <= 299) and (p1.x >= 32 and p1.x + 85 >= 354):
-#             p1.movimenta('b')
-#     elif comandos[pygame.K_RIGHT]:
-#         p1.movimenta('d')
-#     elif comandos[pygame.K_LEFT]:
-#         p1.movimenta('e')
-
 
 # função que verifica se o personagem foi pela direita
 def escolheu_direita():
@@ -157,7 +153,6 @@ def pontua():
         pontos += 3
         
         
-troca_mapa = 0
 def gerencia_mapa():
     global troca_mapa, dir_jogador, y_fundo, x_fundo, DESLOCA_MAPA, bg
     
@@ -245,7 +240,8 @@ def botao_clicado_menu():
     if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):
         MENU = False
         audio_click.play()
-        p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], path = 'Personagens\\' + path_personagem)
+        p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, \
+                        path = 'Personagens\\' + path_personagem)
 
 
 # menu principal

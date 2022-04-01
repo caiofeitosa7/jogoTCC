@@ -10,11 +10,13 @@ class Personagem:
     
     indices = {'cima': 0, 'baixo': 0, 'direita': 0, 'esquerda': 0}
     
-    def __init__(self, x: int, y: int, path = 'Personagens\p1'):
+    def __init__(self, x: int, y: int, largura: int, altura: int, path = 'Personagens\p1'):
         self.__x = x
         self.__y = y
         self.x_anterior = x
         self.y_anterior = y
+        self.__altura = altura
+        self.__largura = largura
         self.__velocidade = 9
         self.__path = path
         self.frame_frente = True
@@ -118,7 +120,15 @@ class Personagem:
     @sprite_atual.setter
     def sprite_atual(self, sprite_atual):
         self.__sprite_atual = sprite_atual
-       
+    
+    @property
+    def largura(self):
+        return self.__largura
+    
+    @property
+    def altura(self):
+        return self.__altura
+    
     @property
     def velocidade(self):
         return self.__velocidade
