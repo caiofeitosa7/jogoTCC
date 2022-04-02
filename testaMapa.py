@@ -31,9 +31,11 @@ p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 3
 
 
 #inimigos
-inimigo = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 0, altura = 0, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
+orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
 # dragao = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
-# orc = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
+# ogro = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
+
+inimigo = orc
 
 # variaveis de pontuação
 pontos = 0
@@ -63,18 +65,6 @@ menu_personagens = [pygame.image.load(caminho + file) for file in sorted(files)]
 # Carregando sons do jogo
 audio_click = pygame.mixer.Sound(r"sounds\Click.mp3")
 
-
-def colidir(ax: float, ay: float, aComp: float, aAlt: float, bx: float, by: float, bComp: float, bAlt: float):
-    if ay + aAlt <= by:
-        return False
-    elif ay >= by + bAlt:
-        return False
-    elif ax + aComp <= bx:
-        return False
-    elif ax >= bx + bComp:
-        return False
-
-    return True
     
 
 # posiciona inimigo no mapa jogavel
@@ -90,11 +80,11 @@ def movimenta_inimigo():
     
     if inimigo.x <= p1.x and dif_x:    # RIGHT
         inimigo.movimenta('d')
-    elif inimigo.x >= p1.x and dif_x:    # LEFT
+    elif inimigo.x >= p1.x and dif_x:  # LEFT
         inimigo.movimenta('e')
-    elif inimigo.y >= p1.y and dif_y:      # UP
+    elif inimigo.y >= p1.y and dif_y:  # UP
         inimigo.movimenta('c')
-    elif inimigo.y <= p1.y and dif_y:    # DOWN
+    elif inimigo.y <= p1.y and dif_y:  # DOWN
         inimigo.movimenta('b')
     
     
@@ -103,9 +93,6 @@ def movimenta_personagem(comandos):
     global troca_mapa
     h = p1.altura
     w = p1.largura
-    pode_baixo = True
-    pode_direita = True
-    pode_esquerda = True
     
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
@@ -138,12 +125,10 @@ def movimenta_personagem(comandos):
         elif troca_mapa == 0:
             if p1.x + w >= 412 and p1.y + h >= 291:
                 p1.movimenta('e')
-        
         else:
             if dir_jogador[-1] == 'DIREITA' and p1.y + h >= 290 and p1.x + w > 108:
                 p1.movimenta('e')
             
-        
     elif comandos[pygame.K_LEFT]:
         p1.movimenta('e')
         
@@ -153,7 +138,6 @@ def movimenta_personagem(comandos):
         elif troca_mapa == 0:
             if p1.x + w <= 225 and p1.y + h >= 291:
                 p1.movimenta('d')
-        
         else:
             if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x < 500:
                 p1.movimenta('d')
@@ -213,8 +197,7 @@ def gerencia_mapa():
                 y_fundo = - deslocamento
             else:
                 x_fundo = - DESLOCA_MAPA
-                y_fundo = - ESPACO_ENTRE_MAPAS
-                
+                y_fundo = - ESPACO_ENTRE_MAPAS       
     else:
         dir_jogador.append('ESQUERDA')
         p1.x = LIM_LATERAL - 70
@@ -343,8 +326,8 @@ def jogar():
 
             
             # personagem
-#             if not colidir(p1.y, p1.x, 35, 48, inimigo.y, inimigo.x, 32, 57):
-            janela.blit(p1.sprite_atual, (p1.x, p1.y))
+            if not p1.colidir(inimigo):
+                janela.blit(p1.sprite_atual, (p1.x, p1.y))
             
             # inimigo
             if sala_atual == 1:

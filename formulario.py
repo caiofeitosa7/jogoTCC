@@ -27,6 +27,9 @@ def form_inicio():
                 justify = JUSTIFICA_TEXTO, anchor = 'w', font = fontStyle, pady=15,\
                 padx=PADDING-10, wraplength=WIDTH_JANELA).pack()
     
+    formInicio_1 = Text(app, width=110, height=2)
+    formInicio_1.pack()
+    
     Label(app, text = 'Quanto tempo faz desde que você comeu algo pela última vez? Você está com fome?',
                 justify = JUSTIFICA_TEXTO, anchor = 'w', font = fontStyle, pady=15,\
                 padx=PADDING, wraplength=WIDTH_JANELA).pack()

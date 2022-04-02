@@ -17,7 +17,7 @@ class Personagem:
         self.y_anterior = y
         self.__altura = altura
         self.__largura = largura
-        self.__velocidade = 9
+        self.__velocidade = 10
         self.__path = path
         self.frame_frente = True
         
@@ -96,7 +96,20 @@ class Personagem:
             
         self.atualiza_frame(direcao)
     
-    
+
+    def colidir(self, obj):
+        if self.__y + self.__altura <= obj.y:
+            return False
+        elif self.__y >= obj.y + obj.altura:
+            return False
+        elif self.__x + self.__largura <= obj.x:
+            return False
+        elif self.__x >= obj.x + obj.largura:
+            return False
+
+        return True
+
+
     @property
     def x(self):
         return self.__x
