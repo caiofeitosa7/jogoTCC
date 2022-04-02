@@ -97,7 +97,7 @@ def movimenta_inimigo():
     elif inimigo.y <= p1.y and dif_y:    # DOWN
         inimigo.movimenta('b')
     
-        
+    
 # movimentacao do personagem
 def movimenta_personagem(comandos):
     global troca_mapa
@@ -110,18 +110,24 @@ def movimenta_personagem(comandos):
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
         
-        if (p1.x + w > 108 and p1.x < 501) and p1.y < LIM_SUPERIOR:
+        if (p1.x + w > 108 and p1.x < 500) and p1.y < LIM_SUPERIOR:
             p1.movimenta('b')
         
     elif comandos[pygame.K_DOWN]:
         p1.movimenta('b')
         
-        if troca_mapa == 0:
-            if p1.y + h >= 472 \
-            or (p1.x <= 196 or p1.x + w >= 413) and p1.y + h >= 291:
+        if p1.y + h >= 472:
+            p1.movimenta('c')
+            
+        elif troca_mapa == 0:
+            if (p1.x <= 196 or p1.x + w >= 413) and p1.y + h >= 290:
                 p1.movimenta('c')
         else:
-            pass
+            if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x <= 500:
+                p1.movimenta('c')
+            
+            elif dir_jogador[-1] == 'DIREITA' and p1.y + h >= 290 and p1.x >= 108:
+                p1.movimenta('c')
             
     elif comandos[pygame.K_RIGHT]:
         p1.movimenta('d')
@@ -134,7 +140,8 @@ def movimenta_personagem(comandos):
                 p1.movimenta('e')
         
         else:
-            pass
+            if dir_jogador[-1] == 'DIREITA' and p1.y + h >= 290 and p1.x + w > 108:
+                p1.movimenta('e')
             
         
     elif comandos[pygame.K_LEFT]:
@@ -148,7 +155,8 @@ def movimenta_personagem(comandos):
                 p1.movimenta('d')
         
         else:
-            pass
+            if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x < 500:
+                p1.movimenta('d')
         
 
 # função que verifica se o personagem foi pela direita
@@ -335,8 +343,8 @@ def jogar():
 
             
             # personagem
-            if not colidir(p1.y, p1.x, 35, 48, inimigo.y, inimigo.x, 32, 57):
-                janela.blit(p1.sprite_atual, (p1.x, p1.y))
+#             if not colidir(p1.y, p1.x, 35, 48, inimigo.y, inimigo.x, 32, 57):
+            janela.blit(p1.sprite_atual, (p1.x, p1.y))
             
             # inimigo
             if sala_atual == 1:
