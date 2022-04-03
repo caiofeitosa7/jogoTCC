@@ -5,6 +5,7 @@ from pygame import mixer
 from jogador import Personagem
 
 troca_mapa = 0
+anima_label_pontos = 0
 
 pygame.init()
 mixer.init()
@@ -64,8 +65,13 @@ menu_personagens = [pygame.image.load(caminho + file) for file in sorted(files)]
 
 # Carregando sons do jogo
 audio_click = pygame.mixer.Sound(r"sounds\Click.mp3")
+audio_inicioJogo = pygame.mixer.Sound(r"sounds\inicioJogo.wav")
+audio_decrease = pygame.mixer.Sound(r"sounds\Decrease.mp3")
+audio_armadilha = pygame.mixer.Sound(r"sounds\Armadilha.wav")
+audio_passarinho = pygame.mixer.Sound(r"sounds\passarinho.wav")
+audio_addItem = pygame.mixer.Sound(r"sounds\inicioJogo.wav")
+audio_pontua = pygame.mixer.Sound(r"sounds\pontua.wav")
 
-    
 
 # posiciona inimigo no mapa jogavel
 def posiciona_inimigo():
@@ -174,6 +180,7 @@ def pontua():
             ganha_ponto = True
     
     if ganha_ponto:
+        audio_pontua.play()
         pontos += 3
         
         
@@ -234,6 +241,13 @@ def atualiza_cenario():
     p1.y = pos_inicial[1]
 
 
+
+
+def animacao_pontos_ganhos():
+    pass
+
+
+
 path_personagem = 'p1'
 
 # click button
@@ -262,7 +276,7 @@ def botao_clicado_menu():
             
     if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):
         MENU = False
-        audio_click.play()
+        audio_inicioJogo.play()
         p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, \
                         path = 'Personagens\\' + path_personagem)
 
@@ -308,6 +322,7 @@ def jogar():
         if not MENU:
             label = f'Pontos: {pontos}'
             label_pontos = fonte_pontos.render(label, True, (255, 255, 255))
+            label_pontua = fonte_pontos.render(f'+{pontos}', True, (255, 255, 255))
             
             p1.x_anterior = p1.x
             p1.y_anterior = p1.y
@@ -341,6 +356,8 @@ def jogar():
                 janela.blit(label_direcoes, (LIM_LATERAL - 540, LIM_SUPERIOR + 35))
             
             janela.blit(label_pontos, (LIM_LATERAL + 30, LIM_SUPERIOR + 30))
+#             animacao_pontos_ganhos(janela)
+#             janela.blit(label_pontua, (LIM_LATERAL + 30, HEIGHT/2 + anima_label_pontos)
         else:
             menu_principal()
         
