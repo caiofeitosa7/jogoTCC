@@ -32,7 +32,7 @@ p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 3
 
 
 #inimigos
-orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'C:\Users\Eliane\Desktop\Temporario\jogoPy\Personagens\orc')
+orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'Personagens\orc')
 # dragao = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 # ogro = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 
@@ -113,7 +113,7 @@ def movimenta_personagem(comandos):
             p1.movimenta('c')
             
         elif troca_mapa == 0:
-            if (p1.x <= 196 or p1.x + w >= 413) and p1.y + h >= 290:
+            if (p1.x <= 194 or p1.x + w >= 413) and p1.y + h >= 290:
                 p1.movimenta('c')
         else:
             if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x <= 500:
