@@ -23,7 +23,7 @@ pygame.display.set_caption("Lost Kingdom")
 janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 
 PATH_MAPA = 'mapas3'
-fundo_placar = pygame.image.load(r'mapas\terra.png')
+fundo_placar = pygame.image.load(r'mapas\pn2.png')
 cobre_sobra_mapa = pygame.image.load(r'mapas\terra2.png')
 
 
@@ -241,11 +241,11 @@ def atualiza_cenario():
     p1.y = pos_inicial[1]
 
 
-
-
-def animacao_pontos_ganhos():
-    pass
-
+# 
+# 
+# def animacao_pontos_ganhos():
+#     pass
+# 
 
 
 path_personagem = 'p1'

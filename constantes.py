@@ -7,4 +7,4 @@ DESLOCA_MAPA = 670
 WIDTH = 800           # largura da janela
 HEIGHT = 487          # altura da janela
 LIM_SUPERIOR = 15
-LIM_LATERAL = WIDTH - 200     # limite a direita
+LIM_LATERAL = WIDTH - 205     # limite a direita
