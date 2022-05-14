@@ -2,7 +2,6 @@ import os
 import pygame
 
 class Personagem:
-    
     sprites_cima = []
     sprites_baixo = []
     sprites_direita = []

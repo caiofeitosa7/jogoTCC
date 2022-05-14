@@ -8,3 +8,4 @@ WIDTH = 800           # largura da janela
 HEIGHT = 487          # altura da janela
 LIM_SUPERIOR = 15
 LIM_LATERAL = WIDTH - 205     # limite a direita
+PATH_MAPA = 'mapas4'

@@ -16,13 +16,24 @@ sairFormulario = False
 arrayInputs = [i for i in range(5)]
 respostasFormInicio = []
 
+app = Tk()
+
+def fecha_janela():
+    global sairFormulario
+    
+    if sairFormulario:
+        print('entrou')
+        sys.exit()
+
+
 def salvar(lista):
     for resposta in arrayInputs:
         lista.append(resposta.get('1.0', 'end'))
         print(resposta.get('1.0', 'end'))
     
+    
 def salvaRespostas():
-    global form, sairFormulario
+    global form, sairFormulario, app
     
     sairFormulario = True
     
@@ -31,17 +42,15 @@ def salvaRespostas():
     elif form == '':
         pass
     
-    
+    fecha_janela()
     
 
 def form_inicio():
-    global form, sairFormulario
+    global form, sairFormulario, app
     
     form = 'inicio'
     posix = WIDTH_JANELA // 6
     posiy = HEIGHT_JANELA // 14
-    
-    app = Tk()
     
     FONT_STYLE = tkFont.Font(family="Arial", size=13)
     
@@ -96,19 +105,46 @@ def form_inicio():
 #     tkinter.Button(app, text = "Print", command = salvaRespostas)
     Button(app, text='Pronto', command=salvaRespostas, font=FONT_STYLE, padx=30).pack()
     
-    
-    if sairFormulario:
-        app.destroy
-        
     app.mainloop()
 
 
+arrayInputs = [i for i in range(5)]
 
-
-
-
+def form_final():
+    global form, sairFormulario
+    
+    form = 'inicio'
+    posix = WIDTH_JANELA // 6
+    posiy = HEIGHT_JANELA // 14
+    
+    FONT_STYLE = tkFont.Font(family="Arial", size=15)
+    
+    app.title('Lost Kingdom')
+    app.geometry(f'{WIDTH_JANELA}x{HEIGHT_JANELA}+{posix}+{posiy}')
+    
+    Label(app, text = '1 – Quanto tempo, em minutos e segundos, você acha que jogou,'
+                + ' desde a mensagem de início do jogo?       \nExemplo = 00:00',
+                justify = JUSTIFICA_TEXTO, anchor = 'w', font = FONT_STYLE, pady=15,\
+                padx=PADDING-10, wraplength=WIDTH_JANELA).pack()
+    
+    arrayInputs[0] = Text(app, width=WIDTH_INPUT, height=2)
+    arrayInputs[0].pack()
+    
+    Label(app, text = '1 – Quanto tempo, em minutos e segundos, você acha que jogou,'
+                + ' desde a mensagem de início do jogo?       \nExemplo = 00:00',
+                justify = JUSTIFICA_TEXTO, anchor = 'w', font = FONT_STYLE, pady=15,\
+                padx=PADDING-10, wraplength=WIDTH_JANELA).pack()
+    
+    arrayInputs[0] = Text(app, width=WIDTH_INPUT, height=2)
+    arrayInputs[0].pack()
+    
+    app.mainloop()
+    
+    
 
 
 
 if __name__ == '__main__':
     form_inicio()
+#     app = Tk()
+#     form_final()

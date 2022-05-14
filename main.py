@@ -2,6 +2,7 @@ import os
 import pygame
 from constantes import *
 from pygame import mixer
+from load_assets import *
 from jogador import Personagem
 
 troca_mapa = 0
@@ -17,17 +18,16 @@ dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIR
 dir_jogador = []                      # direcao que o jogador seguiu em cada sala
 sala_atual = len(dir_jogador)         # em que sala o personagem está
 bg = 0                                # background atual
+fluxo_jogo = 0
+fundo = mapas[bg]
 
 # criando a janela
 pygame.display.set_caption("Lost Kingdom")
 janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 
-PATH_MAPA = 'mapas3'
-fundo_placar = pygame.image.load(r'mapas\pn2.png')
-cobre_sobra_mapa = pygame.image.load(r'mapas\terra2.png')
 
-
-pos_inicial = (LIM_LATERAL/2 - 15, 360)
+# personagem
+pos_inicial = (LIM_LATERAL/2 - 10, 360)
 p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, path = r'Personagens\p1')
 
 
@@ -38,30 +38,12 @@ orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura 
 
 inimigo = orc
 
+
 # variaveis de pontuação
 pontos = 0
 fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
 fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
 
-# carregando sprites do cenário
-mapas = []
-caminho = PATH_MAPA + '\\'
-files = os.listdir(caminho)
-mapas = [pygame.image.load(caminho + file) for file in sorted(files)]
-
-fundo = mapas[bg]
-
-
-# Carregando imagens do menu de personagens
-menu_personagens = []
-caminho = r'menu\menuPersonagens' + '\\'
-files = os.listdir(caminho)
-menu_personagens = [pygame.image.load(caminho + file) for file in sorted(files)]
-
-# menu = pygame.image.load(r'menu\menu_principal.png')
-# jogar_hover = pygame.image.load(r'menu\jogar_hover.png')
-# personagem_hover = pygame.image.load(r'menu\personagem_hover.png')
-# sair_hover = pygame.image.load(r'menu\sair_hover.png')
 
 # Carregando sons do jogo
 audio_click = pygame.mixer.Sound(r"sounds\Click.mp3")
@@ -77,8 +59,8 @@ audio_pontua = pygame.mixer.Sound(r"sounds\pontua.wav")
 def posiciona_inimigo():
     for i in range(8):
         inimigo.movimenta('b')
-    
-    
+
+
 # movimentacao do inimigo
 def movimenta_inimigo():
     dif_y = abs(inimigo.y - p1.y) > 50
@@ -92,8 +74,8 @@ def movimenta_inimigo():
         inimigo.movimenta('c')
     elif inimigo.y <= p1.y and dif_y:  # DOWN
         inimigo.movimenta('b')
-    
-    
+
+
 # movimentacao do personagem
 def movimenta_personagem(comandos):
     global troca_mapa
@@ -153,7 +135,7 @@ def movimenta_personagem(comandos):
 def escolheu_direita():
     if p1.x > LIM_LATERAL / 2 :
         return True
-
+    
     return False
 
 
@@ -183,9 +165,11 @@ def pontua():
         audio_pontua.play()
         pontos += 3
         
-        
+
+# manipula o cenario do jogo
 def gerencia_mapa():
-    global troca_mapa, dir_jogador, y_fundo, x_fundo, DESLOCA_MAPA, bg
+    global troca_mapa, dir_jogador, y_fundo, x_fundo
+    global DESLOCA_MAPA, bg, fluxo_jogo
     
     deslocamento = DESLOCA_MAPA - ESPACO_ENTRE_MAPAS
     
@@ -227,6 +211,7 @@ def gerencia_mapa():
         y_fundo = - deslocamento
         troca_mapa = 0
         bg += 1
+        fluxo_jogo += 1
         p1.x = pos_inicial[0]
         
     
@@ -252,7 +237,7 @@ path_personagem = 'p1'
 
 # click button
 def botao_clicado_menu():
-    global MENU, menu_personagens, p1, path_personagem, pos_inicial
+    global MENU, p1, path_personagem, pos_inicial
     
     x, y = pygame.mouse.get_pos()
     pos_click_horizontal = y >= 200 and y <= 259
@@ -286,7 +271,6 @@ def menu_principal():
     global MENU, menu_personagens, path_personagem
     
     MENU = True
-    x, y = pygame.mouse.get_pos()
     
     if path_personagem == 'p1':
         janela.blit(menu_personagens[0], (0, 0))
@@ -299,10 +283,12 @@ def menu_principal():
     
     
 def jogar():
-    global MENU, menu
+    global MENU, menu, fluxo_jogo
     
     direcoes = 'ESQUERDA                    DIREITA'
     rodando = True
+    cor_labels = (255, 255, 255)
+    posicao_msg = (100, 100)
     
     while rodando:
         pygame.time.delay(DELAY)
@@ -311,56 +297,76 @@ def jogar():
             if event.type == pygame.QUIT:
                 rodando = False
             
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_END:
                     rodando = False
                     
-            if MENU:
+                elif event.key == pygame.K_RETURN:
+                    fluxo_jogo += 1
+                    
+            elif MENU:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     botao_clicado_menu()
         
-        if not MENU:
-            label = f'Pontos: {pontos}'
-            label_pontos = fonte_pontos.render(label, True, (255, 255, 255))
-            label_pontua = fonte_pontos.render(f'+{pontos}', True, (255, 255, 255))
-            
-            p1.x_anterior = p1.x
-            p1.y_anterior = p1.y
-            comandos = pygame.key.get_pressed()
-            movimenta_personagem(comandos)
-            
-            if p1.y <= LIM_SUPERIOR:
-                atualiza_cenario()
-            
-            fundo = mapas[bg]
-            
-            # cenário
-            janela.blit(fundo, (x_fundo, y_fundo))
-            janela.blit(fundo_placar, (LIM_LATERAL + 10, 0))
-            janela.blit(cobre_sobra_mapa, (0, HEIGHT))
+        if fluxo_jogo >= 1:
+            if not MENU:
+                label = f'Pontos: {pontos}'
+                label_pontos = fonte_pontos.render(label, True, cor_labels)
+                label_pontua = fonte_pontos.render(f'+{pontos}', True, cor_labels)
+                
+                p1.x_anterior = p1.x
+                p1.y_anterior = p1.y
+                comandos = pygame.key.get_pressed()
+                movimenta_personagem(comandos)
+                
+                if p1.y <= LIM_SUPERIOR:
+                    atualiza_cenario()
+                
+                fundo = mapas[bg]
+                
+                # cenário
+                janela.blit(fundo, (x_fundo, y_fundo))
+                janela.blit(fundo_placar, (LIM_LATERAL + 10, 0))
+                janela.blit(cobre_sobra_mapa, (0, HEIGHT))
 
-            
-            # personagem
-            if not p1.colidir(inimigo):
+                
+                # personagem
+#                 if not p1.colidir(inimigo):
+#                     janela.blit(p1.sprite_atual, (p1.x, p1.y))
+                
                 janela.blit(p1.sprite_atual, (p1.x, p1.y))
+                
+                # inimigo
+#                 if sala_atual == 1:
+#                     if p1.y <= 400:
+#                         movimenta_inimigo()
+#                     janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
+                
+                # labels
+                if p1.y <= LIM_SUPERIOR + 90:
+                    label_direcoes = fonte_dir.render(direcoes, True, (255, 255, 255))
+                    janela.blit(label_direcoes, (LIM_LATERAL - 540, LIM_SUPERIOR + 35))
+                
+                janela.blit(label_pontos, (LIM_LATERAL + 30, LIM_SUPERIOR + 30))
+    #             animacao_pontos_ganhos(janela)
+    #             janela.blit(label_pontua, (LIM_LATERAL + 30, HEIGHT/2 + anima_label_pontos)
+    
+                if fluxo_jogo == 1:
+                    janela.blit(msg_rei, (100, 100))
+                elif fluxo_jogo == 3:
+                    janela.blit(msg, posicao_msg)
+#                 elif fluxo_jogo == 4:
+#                     janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
+
+                
+                    
+            else:
+                menu_principal()
             
-            # inimigo
-            if sala_atual == 1:
-                if p1.y <= 400:
-                    movimenta_inimigo()
-                janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
             
-            # labels
-            if p1.y <= LIM_SUPERIOR + 90:
-                label_direcoes = fonte_dir.render(direcoes, True, (255, 255, 255))
-                janela.blit(label_direcoes, (LIM_LATERAL - 540, LIM_SUPERIOR + 35))
             
-            janela.blit(label_pontos, (LIM_LATERAL + 30, LIM_SUPERIOR + 30))
-#             animacao_pontos_ganhos(janela)
-#             janela.blit(label_pontua, (LIM_LATERAL + 30, HEIGHT/2 + anima_label_pontos)
         else:
-            menu_principal()
-        
+            janela.blit(abertura, (0,0))
         
         
         
@@ -374,8 +380,9 @@ def jogar():
         pygame.display.update()
         
         
-       
 if __name__ == '__main__':
+#     os.system('python formulario.py')
     jogar()
+    
     
 pygame.quit()
