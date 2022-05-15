@@ -9,7 +9,7 @@ class Personagem:
     
     indices = {'cima': 0, 'baixo': 0, 'direita': 0, 'esquerda': 0}
     
-    def __init__(self, x: int, y: int, largura: int, altura: int, path = 'Personagens\p1'):
+    def __init__(self, x: int, y: int, largura: int, altura: int, path = 'assets\Personagens\p1'):
         self.__x = x
         self.__y = y
         self.x_anterior = x

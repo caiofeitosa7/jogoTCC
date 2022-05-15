@@ -2,8 +2,9 @@ import os
 import pygame
 from constantes import *
 
-fundo_placar = pygame.image.load(r'mapas\pn4.png')
-cobre_sobra_mapa = pygame.image.load(r'mapas\terra2.png')
+
+fundo_placar = pygame.image.load(r'assets\mapas\pn4.png')
+cobre_sobra_mapa = pygame.image.load(r'assets\mapas\terra2.png')
 
 
 # carregando sprites do cenário
@@ -16,13 +17,13 @@ sala_rei = mapas[-1]
 
 # Carregando imagens do menu de personagens
 menu_personagens = []
-caminho = r'menu\menuPersonagens' + '\\'
+caminho = r'assets\menu\menuPersonagens' + '\\'
 files = os.listdir(caminho)
 menu_personagens = [pygame.image.load(caminho + file) for file in sorted(files)]
 
-abertura = pygame.image.load(r'menu\abertura.png')
+abertura = pygame.image.load(r'assets\menu\abertura.png')
 
-path_msg = 'mensagens'
+path_msg = 'assets\mensagens'
 # Carregando mensagens
 msg_rei = pygame.image.load(path_msg + r'\msgRei.png')
 msg_atacado = pygame.image.load(path_msg + r'\msgAtacado.png')

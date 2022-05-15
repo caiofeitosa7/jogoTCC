@@ -1,8 +1,7 @@
-examples
+__pycache__\
+assets\examples
+assets\FrontEnd
+assets\Sprites
+assets\Personagem
 
-FrontEnd
-
-Sprites
-Personagem
-jogo1.3
-jogo1.4
+assets\mapas3

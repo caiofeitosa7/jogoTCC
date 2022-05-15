@@ -30,25 +30,25 @@ janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
 
 # personagem
 pos_inicial = (LIM_LATERAL/2 - 10, 360)
-p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, path = r'Personagens\p1')
+p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, path = r'assets\Personagens\p1')
 
 
 #inimigos
-orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'Personagens\orc')
+orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'assets\Personagens\orc')
 # dragao = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 # ogro = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 
 inimigo = orc
 
-
+path_sounds = 'assets\\'
 # Carregando sons do jogo
-audio_click = pygame.mixer.Sound(r"sounds\Click.mp3")
-audio_inicioJogo = pygame.mixer.Sound(r"sounds\inicioJogo.wav")
-audio_decrease = pygame.mixer.Sound(r"sounds\Decrease.mp3")
-audio_armadilha = pygame.mixer.Sound(r"sounds\Armadilha.wav")
-audio_passarinho = pygame.mixer.Sound(r"sounds\passarinho.wav")
-audio_addItem = pygame.mixer.Sound(r"sounds\inicioJogo.wav")
-audio_pontua = pygame.mixer.Sound(r"sounds\pontua.wav")
+audio_click = pygame.mixer.Sound(path_sounds + r"sounds\Click.mp3")
+audio_inicioJogo = pygame.mixer.Sound(path_sounds + r"sounds\inicioJogo.wav")
+audio_decrease = pygame.mixer.Sound(path_sounds + r"sounds\Decrease.mp3")
+audio_armadilha = pygame.mixer.Sound(path_sounds + r"sounds\Armadilha.wav")
+audio_passarinho = pygame.mixer.Sound(path_sounds + r"sounds\passarinho.wav")
+audio_addItem = pygame.mixer.Sound(path_sounds + r"sounds\inicioJogo.wav")
+audio_pontua = pygame.mixer.Sound(path_sounds + r"sounds\pontua.wav")
 
 
 # variaveis de pontuação
@@ -87,56 +87,60 @@ def movimenta_personagem(comandos):
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
         
-        if fundo == sala_rei and p1.y < 18:
-            p1.movimenta('b')
-        
-        elif (p1.x + w > 108 and p1.x < 500) and p1.y < LIM_SUPERIOR:
-            p1.movimenta('b')
+        if sala_atual == 24:
+            if p1.y < 18:
+                p1.movimenta('b')
+        else:
+            if (p1.x + w > 108 and p1.x < 500) and p1.y < LIM_SUPERIOR:
+                p1.movimenta('b')
             
     elif comandos[pygame.K_DOWN]:
         p1.movimenta('b')
         
-        if fundo == sala_rei and p1.y + h >= 458:
-            p1.movimenta('c')
-            
-        elif p1.y + h >= 472:
-            p1.movimenta('c')
-            
-        elif troca_mapa == 0:
-            if (p1.x <= 194 or p1.x + w >= 413) and p1.y + h >= 290:
+        if sala_atual == 24:
+            if p1.y + h >= 460:
                 p1.movimenta('c')
         else:
-            if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x <= 500:
+            if p1.y + h >= 472:
                 p1.movimenta('c')
-            
-            elif dir_jogador[-1] == 'DIREITA' and p1.y + h >= 290 and p1.x >= 108:
-                p1.movimenta('c')
+                
+            elif troca_mapa == 0:
+                if (p1.x <= 194 or p1.x + w >= 413) and p1.y + h >= 290:
+                    p1.movimenta('c')
+            else:
+                if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x <= 500:
+                    p1.movimenta('c')
+                
+                elif dir_jogador[-1] == 'DIREITA' and p1.y + h >= 290 and p1.x >= 108:
+                    p1.movimenta('c')
             
     elif comandos[pygame.K_RIGHT]:
         p1.movimenta('d')
         
         if p1.x + w >= 596:
             p1.movimenta('e')
-            
-        elif troca_mapa == 0:
-            if p1.x + w >= 412 and p1.y + h >= 291:
-                p1.movimenta('e')
-        else:
-            if dir_jogador[-1] == 'DIREITA' and p1.y + h >= 290 and p1.x + w > 108:
-                p1.movimenta('e')
+        
+        if not sala_atual == 24:
+            if troca_mapa == 0:
+                if p1.x + w >= 412 and p1.y + h >= 291:
+                    p1.movimenta('e')
+            else:
+                if dir_jogador[-1] == 'DIREITA' and p1.y + h >= 290 and p1.x + w > 108:
+                    p1.movimenta('e')
             
     elif comandos[pygame.K_LEFT]:
         p1.movimenta('e')
         
         if p1.x + w <= 45:
             p1.movimenta('d')
-            
-        elif troca_mapa == 0:
-            if p1.x + w <= 225 and p1.y + h >= 291:
-                p1.movimenta('d')
-        else:
-            if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x < 500:
-                p1.movimenta('d')
+        
+        if not sala_atual == 24:
+            if troca_mapa == 0:
+                if p1.x + w <= 225 and p1.y + h >= 291:
+                    p1.movimenta('d')
+            else:
+                if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x < 500:
+                    p1.movimenta('d')
         
 
 # função que verifica se o personagem foi pela direita
@@ -284,7 +288,7 @@ def botao_clicado_menu():
         MENU = False
         audio_inicioJogo.play()
         p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, \
-                        path = 'Personagens\\' + path_personagem)
+                        path = 'assets\Personagens\\' + path_personagem)
 
 
 # menu principal
@@ -334,7 +338,7 @@ def jogar():
         
         if fluxo_jogo >= 1:
             if not MENU:
-                label = f'Pontos: {pontos}'
+                label = f'Pontos:{pontos}'
                 label_pontos = fonte_pontos.render(label, True, cor_labels)
                 label_pontua = fonte_pontos.render(f'+{pontos}', True, cor_labels)
                 
@@ -367,7 +371,7 @@ def jogar():
 #                     janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
                 
                 # labels
-                if p1.y <= LIM_SUPERIOR + 90:
+                if p1.y <= LIM_SUPERIOR + 90 and sala_atual != 24:
                     label_direcoes = fonte_dir.render(direcoes, True, (255, 255, 255))
                     janela.blit(label_direcoes, (LIM_LATERAL - 540, LIM_SUPERIOR + 35))
                 
@@ -387,9 +391,6 @@ def jogar():
                     elif fluxo_jogo == 9:
                         janela.blit(msg_form_final, posicao_msg)
 
-
-                
-                    
             else:
                 menu_principal()
             
