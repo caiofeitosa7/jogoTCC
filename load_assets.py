@@ -12,6 +12,8 @@ caminho = PATH_MAPA + '\\'
 files = os.listdir(caminho)
 mapas = [pygame.image.load(caminho + file) for file in sorted(files)]
 
+sala_rei = mapas[-1]
+
 # Carregando imagens do menu de personagens
 menu_personagens = []
 caminho = r'menu\menuPersonagens' + '\\'
@@ -19,7 +21,6 @@ files = os.listdir(caminho)
 menu_personagens = [pygame.image.load(caminho + file) for file in sorted(files)]
 
 abertura = pygame.image.load(r'menu\abertura.png')
-
 
 path_msg = 'mensagens'
 # Carregando mensagens
@@ -30,6 +31,8 @@ msg_nao_encontrou = pygame.image.load(path_msg + r'\msgNaoEncontrou.png')
 msg_dragao = pygame.image.load(path_msg + r'\popDragao.png')
 msg_ogro = pygame.image.load(path_msg + r'\popOgro.png')
 msg_orc = pygame.image.load(path_msg + r'\popOrc.png')
+
+
 
 
 

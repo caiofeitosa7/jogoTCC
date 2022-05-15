@@ -11,15 +11,17 @@ anima_label_pontos = 0
 pygame.init()
 mixer.init()
 
-y_fundo = - DESLOCA_MAPA + ESPACO_ENTRE_MAPAS
+y_fundo = - DESLOCA_MAPA_VERTICAL
 x_fundo = 0
 dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
                ('ESQUERDA', 'DIREITA', 'ESQUERDA'), ('DIREITA', 'ESQUERDA', 'DIREITA')]    # direcoes corretas de cada calabouço
 dir_jogador = []                      # direcao que o jogador seguiu em cada sala
 sala_atual = len(dir_jogador)         # em que sala o personagem está
-bg = 0                                # background atual
+bg_atual = 0                          # background atual
+bg_anterior = -1
 fluxo_jogo = 0
-fundo = mapas[bg]
+fundo = mapas[bg_atual]
+volta_inicio = True
 
 # criando a janela
 pygame.display.set_caption("Lost Kingdom")
@@ -39,12 +41,6 @@ orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura 
 inimigo = orc
 
 
-# variaveis de pontuação
-pontos = 0
-fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
-fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
-
-
 # Carregando sons do jogo
 audio_click = pygame.mixer.Sound(r"sounds\Click.mp3")
 audio_inicioJogo = pygame.mixer.Sound(r"sounds\inicioJogo.wav")
@@ -53,6 +49,12 @@ audio_armadilha = pygame.mixer.Sound(r"sounds\Armadilha.wav")
 audio_passarinho = pygame.mixer.Sound(r"sounds\passarinho.wav")
 audio_addItem = pygame.mixer.Sound(r"sounds\inicioJogo.wav")
 audio_pontua = pygame.mixer.Sound(r"sounds\pontua.wav")
+
+
+# variaveis de pontuação
+pontos = 0
+fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
+fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
 
 
 # posiciona inimigo no mapa jogavel
@@ -85,13 +87,19 @@ def movimenta_personagem(comandos):
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
         
-        if (p1.x + w > 108 and p1.x < 500) and p1.y < LIM_SUPERIOR:
+        if fundo == sala_rei and p1.y < 18:
             p1.movimenta('b')
         
+        elif (p1.x + w > 108 and p1.x < 500) and p1.y < LIM_SUPERIOR:
+            p1.movimenta('b')
+            
     elif comandos[pygame.K_DOWN]:
         p1.movimenta('b')
         
-        if p1.y + h >= 472:
+        if fundo == sala_rei and p1.y + h >= 458:
+            p1.movimenta('c')
+            
+        elif p1.y + h >= 472:
             p1.movimenta('c')
             
         elif troca_mapa == 0:
@@ -168,10 +176,9 @@ def pontua():
 
 # manipula o cenario do jogo
 def gerencia_mapa():
-    global troca_mapa, dir_jogador, y_fundo, x_fundo
-    global DESLOCA_MAPA, bg, fluxo_jogo
-    
-    deslocamento = DESLOCA_MAPA - ESPACO_ENTRE_MAPAS
+    global troca_mapa, dir_jogador, y_fundo, x_fundo, volta_inicio
+    global DESLOCA_MAPA, bg_atual, fluxo_jogo, bg_anterior
+    global sala_atual, DESLOCA_MAPA_VERTICAL
     
     if escolheu_direita():
         dir_jogador.append('DIREITA')
@@ -179,42 +186,56 @@ def gerencia_mapa():
         
         if troca_mapa == 1:
             x_fundo = - DESLOCA_MAPA
-            y_fundo = - deslocamento
+            y_fundo = - DESLOCA_MAPA_VERTICAL
             
         if troca_mapa == 2:
-            bg += 1
+            bg_atual += 1
+            
             if dir_jogador[sala_atual - 1] == 'DIREITA': # verifica qual opcao a pessoa tinha escolhido na sala anterior
                 x_fundo = - DESLOCA_MAPA
-                y_fundo = - deslocamento
+                y_fundo = - DESLOCA_MAPA_VERTICAL
             else:
                 x_fundo = - DESLOCA_MAPA
-                y_fundo = - ESPACO_ENTRE_MAPAS       
+                y_fundo = 0
     else:
         dir_jogador.append('ESQUERDA')
         p1.x = LIM_LATERAL - 70
         
         if troca_mapa == 1:
             x_fundo = 0
-            y_fundo = - ESPACO_ENTRE_MAPAS
+            y_fundo = 0
             
         if troca_mapa == 2:
-            bg += 1
+            bg_atual += 1
+            
             if dir_jogador[sala_atual - 1] == 'DIREITA': # verifica qual opcao a pessoa tinha escolhido na sala anterior
                 x_fundo = 0
-                y_fundo = - deslocamento
+                y_fundo = - DESLOCA_MAPA_VERTICAL
             else:
                 x_fundo = 0
-                y_fundo = - ESPACO_ENTRE_MAPAS
-            
+                y_fundo = 0
+                
     if troca_mapa == 3:
         x_fundo = 0
-        y_fundo = - deslocamento
+        y_fundo = - DESLOCA_MAPA_VERTICAL
         troca_mapa = 0
-        bg += 1
+        bg_anterior = bg_atual
+        bg_atual += 1
         fluxo_jogo += 1
         p1.x = pos_inicial[0]
-        
     
+    if fluxo_jogo == 9 and volta_inicio:
+        volta_inicio = False
+        fluxo_jogo = 2             # coloquei uma unidade a menos do que queria porque no if de baixo ele incrementa
+        bg_atual = 0
+        sala_atual = 0
+        
+    if fundo == sala_rei:
+        x_fundo = 0
+        y_fundo = - DESLOCA_MAPA_VERTICAL
+        
+        
+        
 # muda para a próxima sala
 def atualiza_cenario():
     global sala_atual, dir_jogador, y_fundo, x_fundo, troca_mapa
@@ -283,7 +304,7 @@ def menu_principal():
     
     
 def jogar():
-    global MENU, menu, fluxo_jogo
+    global MENU, menu, fluxo_jogo, bg_anterior
     
     direcoes = 'ESQUERDA                    DIREITA'
     rodando = True
@@ -293,6 +314,9 @@ def jogar():
     while rodando:
         pygame.time.delay(DELAY)
         
+        if fluxo_jogo % 2 == 0 and fluxo_jogo:
+            bg_anterior = bg_atual
+            
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 rodando = False
@@ -301,7 +325,7 @@ def jogar():
                 if event.key == pygame.K_END:
                     rodando = False
                     
-                elif event.key == pygame.K_RETURN:
+                elif event.key == pygame.K_RETURN and bg_anterior != bg_atual:
                     fluxo_jogo += 1
                     
             elif MENU:
@@ -319,10 +343,10 @@ def jogar():
                 comandos = pygame.key.get_pressed()
                 movimenta_personagem(comandos)
                 
-                if p1.y <= LIM_SUPERIOR:
+                if p1.y <= LIM_SUPERIOR and fundo != sala_rei:
                     atualiza_cenario()
                 
-                fundo = mapas[bg]
+                fundo = mapas[bg_atual]
                 
                 # cenário
                 janela.blit(fundo, (x_fundo, y_fundo))
@@ -351,12 +375,18 @@ def jogar():
     #             animacao_pontos_ganhos(janela)
     #             janela.blit(label_pontua, (LIM_LATERAL + 30, HEIGHT/2 + anima_label_pontos)
     
-                if fluxo_jogo == 1:
-                    janela.blit(msg_rei, (100, 100))
-                elif fluxo_jogo == 3:
-                    janela.blit(msg, posicao_msg)
-#                 elif fluxo_jogo == 4:
-#                     janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
+                if fluxo_jogo % 2 != 0:
+                    if fluxo_jogo == 1:
+                        janela.blit(msg_rei, posicao_msg)
+                    elif fluxo_jogo == 3:
+                        janela.blit(msg_orc, posicao_msg)
+                    elif fluxo_jogo == 5:
+                        janela.blit(msg_ogro, posicao_msg)
+                    elif fluxo_jogo == 7:
+                        janela.blit(msg_dragao, posicao_msg)
+                    elif fluxo_jogo == 9:
+                        janela.blit(msg_form_final, posicao_msg)
+
 
                 
                     
