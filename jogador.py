@@ -145,7 +145,3 @@ class Personagem:
     def velocidade(self):
         return self.__velocidade
     
-#     @velocidade.setter
-#     def velocidade(self):
-#         self.__velocidade = velocidade
-    
