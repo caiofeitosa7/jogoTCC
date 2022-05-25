@@ -34,14 +34,6 @@ msg_ogro = pygame.image.load(path + r'\popOgro.png')
 msg_orc = pygame.image.load(path + r'\popOrc.png')
 
 
-# -------------------- Carregando itens -------------------------
-path = r'assets\itens\\'
-files = os.listdir(path)
-figura_itens = [pygame.image.load(path + item) for item in sorted(files)]
-
-armadilha1 = Item(200, 200, 34, 38, figura_itens[0], msg_atacado)
-
-
 # --------------------- Carregando sons -------------------------
 path = r'assets\sounds\\'
 audio_click = pygame.mixer.Sound(path + r"Click.mp3")
@@ -51,6 +43,15 @@ audio_armadilha = pygame.mixer.Sound(path + r"Armadilha.wav")
 audio_passarinho = pygame.mixer.Sound(path + r"passarinho.wav")
 audio_addItem = pygame.mixer.Sound(path + r"inicioJogo.wav")
 audio_pontua = pygame.mixer.Sound(path + r"pontua.wav")
+
+
+# -------------------- Carregando itens -------------------------
+path = r'assets\itens\\'
+files = os.listdir(path)
+figura_itens = [pygame.image.load(path + item) for item in sorted(files)]
+
+armadilha1 = Item(200, 200, 34, 38, figura_itens[2], msg_atacado, audio_armadilha)
+
 
 
 

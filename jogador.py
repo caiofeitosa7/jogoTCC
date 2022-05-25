@@ -6,6 +6,9 @@ class Personagem:
     sprites_baixo = []
     sprites_direita = []
     sprites_esquerda = []
+    itens_encontrados = []
+    
+    pos_item_inventario = ()
     
     indices = {'cima': 0, 'baixo': 0, 'direita': 0, 'esquerda': 0}
     

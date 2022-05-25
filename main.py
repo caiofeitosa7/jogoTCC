@@ -332,6 +332,7 @@ def jogar():
                 
                 # personagem
                 if p1.colidir(armadilha1):
+                    
                     janela.blit(armadilha1.mensagem, (armadilha1.x, armadilha1.y))
                 
                 janela.blit(p1.sprite_atual, (p1.x, p1.y))

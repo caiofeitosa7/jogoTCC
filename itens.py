@@ -1,11 +1,12 @@
 class Item:
-    def __init__(self, x: int, y: int, largura: int, altura: int, figura: str, mensagem):
+    def __init__(self, x: int, y: int, largura: int, altura: int, figura: str, mensagem, som):
         self._x = x
         self._y = y
         self._altura = altura
         self._largura = largura
         self._figura = figura
         self._mensagem = mensagem
+        self._som = som
     
     @property
     def x(self):
@@ -38,3 +39,8 @@ class Item:
     @property
     def figura(self):
         return self._figura
+    
+    @property
+    def som(self):
+        return self._som
+    
