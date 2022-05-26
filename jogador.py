@@ -6,9 +6,6 @@ class Personagem:
     sprites_baixo = []
     sprites_direita = []
     sprites_esquerda = []
-    itens_encontrados = []
-    
-    pos_item_inventario = ()
     
     indices = {'cima': 0, 'baixo': 0, 'direita': 0, 'esquerda': 0}
     
@@ -73,7 +70,7 @@ class Personagem:
             elif direcao == 'e':
                 self.__verifica_sentido_frame('esquerda')
                 self.__sprite_atual = self.sprites_esquerda[self.indices.get('esquerda')]
-    
+        
     
     def __verifica_sentido_movimenta(self, direcao: str):
         if self.frame_frente:

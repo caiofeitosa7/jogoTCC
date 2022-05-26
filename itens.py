@@ -1,5 +1,5 @@
-class Item:
-    def __init__(self, x: int, y: int, largura: int, altura: int, figura: str, mensagem, som):
+class Objeto:
+    def __init__(self, x: int, y: int, largura: int, altura: int, figura: str, mensagem, som, descricao):
         self._x = x
         self._y = y
         self._altura = altura
@@ -7,6 +7,7 @@ class Item:
         self._figura = figura
         self._mensagem = mensagem
         self._som = som
+        self._descricao = descricao
     
     @property
     def x(self):
@@ -43,4 +44,8 @@ class Item:
     @property
     def som(self):
         return self._som
+    
+    @property
+    def descricao(self):
+        return self._descricao
     

@@ -4,6 +4,15 @@ from constantes import *
 from load_assets import *
 from jogador import Personagem
 
+# ------ variaveis do inventario ------
+itemy = 188
+itemx = LIM_LATERAL + 31
+
+itens_encontrados = []
+pos_item_inventario = [itemx, itemy]
+
+# -------------------------------------
+
 troca_mapa = 0
 anima_label_pontos = 0
 
@@ -44,6 +53,23 @@ fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
 fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
 
 
+def encontrou_item(objeto):
+    global pos_item_inventario, itemx
+    
+    if objeto.descricao == 'item':
+        objeto.x = pos_item_inventario[0]
+        objeto.y = pos_item_inventario[1]
+        
+        itens_encontrados.append(objeto)
+        
+        if len(itens_encontrados) % 4 == 0:
+            pos_item_inventario[0] = itemx
+            pos_item_inventario[1] += 42
+        else:
+            pos_item_inventario[0] += 42
+
+            
+            
 # movimentacao do inimigo
 def movimenta_inimigo():
     dif_y = abs(inimigo.y - p1.y) > 50
@@ -326,14 +352,36 @@ def jogar():
 
 
                 janela.blit(armadilha1.figura, (armadilha1.x, armadilha1.y))
-                
+                janela.blit(armadilha2.figura, (armadilha2.x, armadilha2.y))
+                janela.blit(armadilha3.figura, (armadilha3.x, armadilha3.y))
+                janela.blit(armadilha4.figura, (armadilha4.x, armadilha4.y))
+                janela.blit(armadilha5.figura, (armadilha5.x, armadilha5.y))
                 
                 
                 
                 # personagem
                 if p1.colidir(armadilha1):
+#                     janela.blit(armadilha1.mensagem, (armadilha1.x, armadilha1.y))
+                    encontrou_item(armadilha1)
                     
-                    janela.blit(armadilha1.mensagem, (armadilha1.x, armadilha1.y))
+                elif p1.colidir(armadilha2):
+                    encontrou_item(armadilha2)
+                
+                elif p1.colidir(armadilha3):
+                    encontrou_item(armadilha3)
+                    
+                elif p1.colidir(armadilha4):
+                    encontrou_item(armadilha4)
+                
+                elif p1.colidir(armadilha5):
+                    encontrou_item(armadilha5)
+                
+                
+                
+                
+                
+                
+                
                 
                 janela.blit(p1.sprite_atual, (p1.x, p1.y))
                 
