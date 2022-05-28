@@ -1,14 +1,14 @@
 class Objeto:
-    def __init__(self, x: int, y: int, largura: int, altura: int, figura: str, mensagem, som, descricao):
+    def __init__(self, x: int, y: int, largura: int, altura: int, figura: str, msg, audio, desc):
         self._x = x
         self._y = y
         self._altura = altura
         self._largura = largura
         self._figura = figura
-        self._mensagem = mensagem
-        self._som = som
-        self._descricao = descricao
-    
+        self._mensagem = msg
+        self._audio = audio
+        self._descricao = desc
+        
     @property
     def x(self):
         return self._x
@@ -42,8 +42,8 @@ class Objeto:
         return self._figura
     
     @property
-    def som(self):
-        return self._som
+    def audio(self):
+        return self._audio
     
     @property
     def descricao(self):

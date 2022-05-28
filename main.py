@@ -1,5 +1,6 @@
 import os
 import pygame
+from formulario import *
 from constantes import *
 from load_assets import *
 from jogador import Personagem
@@ -16,8 +17,6 @@ pos_item_inventario = [itemx, itemy]
 troca_mapa = 0
 anima_label_pontos = 0
 
-pygame.init()
-
 y_fundo = - DESLOCA_MAPA_VERTICAL
 x_fundo = 0
 dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
@@ -30,9 +29,7 @@ fluxo_jogo = 0
 fundo = mapas[bg_atual]
 volta_inicio = True
 
-# criando a janela
-pygame.display.set_caption("Lost Kingdom")
-janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+
 
 
 # personagem
@@ -47,13 +44,10 @@ orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura 
 
 inimigo = orc
 
-# variaveis de pontuação
-pontos = 0
-fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
-fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
 
 
-def encontrou_item(objeto):
+
+def encontrou_objeto(objeto):
     global pos_item_inventario, itemx
     
     if objeto.descricao == 'item':
@@ -67,6 +61,10 @@ def encontrou_item(objeto):
             pos_item_inventario[1] += 42
         else:
             pos_item_inventario[0] += 42
+    
+    objeto.audio.play()
+        
+    
 
             
             
@@ -362,19 +360,19 @@ def jogar():
                 # personagem
                 if p1.colidir(armadilha1):
 #                     janela.blit(armadilha1.mensagem, (armadilha1.x, armadilha1.y))
-                    encontrou_item(armadilha1)
+                    encontrou_objeto(armadilha1)
                     
                 elif p1.colidir(armadilha2):
-                    encontrou_item(armadilha2)
+                    encontrou_objeto(armadilha2)
                 
                 elif p1.colidir(armadilha3):
-                    encontrou_item(armadilha3)
+                    encontrou_objeto(armadilha3)
                     
                 elif p1.colidir(armadilha4):
-                    encontrou_item(armadilha4)
+                    encontrou_objeto(armadilha4)
                 
                 elif p1.colidir(armadilha5):
-                    encontrou_item(armadilha5)
+                    encontrou_objeto(armadilha5)
                 
                 
                 
@@ -437,6 +435,17 @@ def jogar():
         
         
 if __name__ == '__main__':
+    form_inicio()
+    
+    # criando a janela
+    pygame.init()
+    pygame.display.set_caption("Lost Kingdom")
+    janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+    
+    # variaveis de pontuação
+    pontos = 0
+    fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
+    fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
     jogar()    
     
-pygame.quit()
+    pygame.quit()

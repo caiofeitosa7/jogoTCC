@@ -50,11 +50,11 @@ path = r'assets\itens\\'
 files = os.listdir(path)
 figura_itens = [pygame.image.load(path + item) for item in sorted(files)]
 
-armadilha1 = Objeto(200, 200, 34, 38, figura_itens[2], msg_atacado, audio_armadilha, 'item')
-armadilha2 = Objeto(200, 250, 34, 38, figura_itens[2], msg_atacado, audio_armadilha, 'item')
-armadilha3 = Objeto(200, 150, 34, 38, figura_itens[2], msg_atacado, audio_armadilha, 'item')
-armadilha4 = Objeto(250, 250, 34, 38, figura_itens[2], msg_atacado, audio_armadilha, 'item')
-armadilha5 = Objeto(250, 150, 34, 38, figura_itens[2], msg_atacado, audio_armadilha, 'item')
+armadilha1 = Objeto(200, 200, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
+armadilha2 = Objeto(200, 250, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
+armadilha3 = Objeto(200, 150, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
+armadilha4 = Objeto(250, 250, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
+armadilha5 = Objeto(250, 150, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
 
 
 
