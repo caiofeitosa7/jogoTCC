@@ -26,7 +26,7 @@ def salvaRespostas():
     
 
 def form_inicio():
-    global form, app
+    global app
     
     form = 'inicio'
     posix = WIDTH_JANELA // 6

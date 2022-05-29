@@ -1,6 +1,7 @@
 import os
 import pygame
-from formulario import *
+from formulario_inicial import form_inicio
+from formulario_final import form_final
 from constantes import *
 from load_assets import *
 from jogador import Personagem
@@ -446,6 +447,8 @@ if __name__ == '__main__':
     pontos = 0
     fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
     fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
-    jogar()    
     
+    jogar()
     pygame.quit()
+    form_final()
+    
