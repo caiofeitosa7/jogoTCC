@@ -1,5 +1,6 @@
-import os
+import sys
 import pygame
+from gera_arquivos import limpa_resultados
 from formulario_inicial import form_inicio
 from formulario_final import form_final
 from constantes import *
@@ -323,7 +324,9 @@ def jogar():
             
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_END:
-                    rodando = False
+#                     rodando = False
+                    gera_arquivos.limpa_resultados()
+                    sys.exit()
                     
                 elif event.key == pygame.K_RETURN and bg_anterior != bg_atual:
                     fluxo_jogo += 1
