@@ -1,4 +1,5 @@
 import sys
+import gera_arquivos
 from tkinter import *
 import tkinter.font as tkFont
 
@@ -15,11 +16,23 @@ POS_Y = 10
 respostas = []
 respostasFormFinal = []
 
+perguntas = (
+        '  1 – Quanto tempo, em minutos e segundos, você acha que jogou,'
+            + ' desde a mensagem de início do jogo?       \n  Formato = 00:00',
+        '2 - Em uma escala de 1 a 5 onde 1 representa nenhuma diversão e 5 representa muita'
+                + ' diversão, qual nota você atribuiria a este jogo?'
+                + '                              ',
+        '  3 - O que poderia ser feito para torná-lo mais divertido?'
+                + '                                            '
+                + '                                            ',
+    )
+
+
 def salva_respostas():    
     for resposta in respostas:
         respostasFormFinal.append(resposta.get('1.0', 'end'))
     
-    print(respostasFormFinal)
+    gera_arquivos.arquivo_analise(perguntas, respostasFormFinal, 'final')
     sys.exit()
 
     
@@ -45,26 +58,21 @@ def form_final():
     
     Label(app, text=" ").pack()
     
-    Label(app, text = '  1 – Quanto tempo, em minutos e segundos, você acha que jogou,'
-                + ' desde a mensagem de início do jogo?       \n  Formato = 00:00',
+    Label(app, text = perguntas[0],
                 justify=JUSTIFICA_TEXTO, anchor='w', font=FONT_STYLE, pady=15,\
                 padx=PADDING-10, wraplength=WIDTH_JANELA).pack()
     
     respostas.append(Text(app, width=WIDTH_INPUT, height=2, font = FONT_STYLE_INPUT))
     respostas[0].pack()
     
-    Label(app, text = '2 - Em uma escala de 1 a 5 onde 1 representa nenhuma diversão e 5 representa muita'
-                + ' diversão, qual nota você atribuiria a este jogo?'
-                + '                              ',
+    Label(app, text = perguntas[1],
                 justify=JUSTIFICA_TEXTO, anchor='w', font=FONT_STYLE, pady=15,\
                 padx=PADDING-10, wraplength=WIDTH_JANELA).pack()
     
     respostas.append(Text(app, width=WIDTH_INPUT, height=2, font=FONT_STYLE_INPUT))
     respostas[1].pack()
     
-    Label(app, text = '  3 - O que poderia ser feito para torná-lo mais divertido?'
-                + '                                            '
-                + '                                            ',
+    Label(app, text = perguntas[2],
                 justify=JUSTIFICA_TEXTO, anchor='w', font=FONT_STYLE, pady=15,\
                 padx=PADDING-10, wraplength=WIDTH_JANELA).pack()
     

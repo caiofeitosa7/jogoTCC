@@ -1,4 +1,5 @@
 import sys
+import time
 import pygame
 from gera_arquivos import limpa_resultados
 from formulario_inicial import form_inicio
@@ -6,6 +7,7 @@ from formulario_final import form_final
 from constantes import *
 from load_assets import *
 from jogador import Personagem
+import gera_arquivos
 
 # ------ variaveis do inventario ------
 itemy = 188
@@ -17,6 +19,8 @@ pos_item_inventario = [itemx, itemy]
 # -------------------------------------
 
 troca_mapa = 0
+time_fim_jogo = 0
+time_inicio_jogo = 0
 anima_label_pontos = 0
 
 y_fundo = - DESLOCA_MAPA_VERTICAL
@@ -31,9 +35,6 @@ fluxo_jogo = 0
 fundo = mapas[bg_atual]
 volta_inicio = True
 
-
-
-
 # personagem
 pos_inicial = (LIM_LATERAL/2 - 10, 360)
 p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, path = r'assets\Personagens\p1')
@@ -45,8 +46,6 @@ orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura 
 # ogro = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
 
 inimigo = orc
-
-
 
 
 def encontrou_objeto(objeto):
@@ -66,9 +65,6 @@ def encontrou_objeto(objeto):
     
     objeto.audio.play()
         
-    
-
-            
             
 # movimentacao do inimigo
 def movimenta_inimigo():
@@ -163,19 +159,36 @@ def pontua():
     
     if sala_atual <= 2:                           # primeiro calabouço
         if not escolheu_direita():
-            ganha_ponto = True
+            if sala_atual == 0 \
+               or sala_atual == 1 and dir_jogador[-1] == 'ESQUERDA' \
+               or sala_atual == 2 and dir_jogador[-1] == 'ESQUERDA' and dir_jogador[-2] == 'ESQUERDA':
+                ganha_ponto = True
             
-    if sala_atual > 2 and sala_atual <= 5:        # segundo calabouço
+    if sala_atual >= 3 and sala_atual <= 5:        # segundo calabouço
         if escolheu_direita():
-            ganha_ponto = True
+            if sala_atual == 3 \
+               or sala_atual == 4 and dir_jogador[-1] == 'DIREITA' \
+               or sala_atual == 5 and dir_jogador[-1] == 'DIREITA' and dir_jogador[-2] == 'DIREITA':
+                ganha_ponto = True
             
-#      ('e', 'd', 'e'), ('d', 'e', 'd')]
-    if sala_atual == 6 or sala_atual == 8 or sala_atual == 10:
+#      ('ESQUERDA', 'DIREITA', 'ESQUERDA')
+    if sala_atual >= 6 and sala_atual <= 8:        # terceiro calabouco        
         if not escolheu_direita():
+            if sala_atual == 6 \
+               or sala_atual == 8 and dir_jogador[-1] == 'DIREITA' and dir_jogador[-2] == 'ESQUERDA':
+                ganha_ponto = True
+                
+        elif sala_atual == 7:
             ganha_ponto = True
-    
-    if sala_atual == 7 or sala_atual == 9 or sala_atual == 11:
+            
+#      ('DIREITA', 'ESQUERDA', 'DIREITA')
+    if sala_atual >= 9 and sala_atual <= 11:
         if escolheu_direita():
+            if sala_atual == 9 \
+               or sala_atual == 11 and dir_jogador[-1] == 'ESQUERDA' and dir_jogador[-2] == 'DIREITA':
+                ganha_ponto = True
+                
+        elif sala_atual == 10:
             ganha_ponto = True
     
     if ganha_ponto:
@@ -284,6 +297,7 @@ def botao_clicado_menu():
     if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):
         MENU = False
         audio_inicioJogo.play()
+        time_inicio_jogo = time.time()
         p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, \
                         path = 'assets\Personagens\\' + path_personagem)
 
@@ -308,9 +322,9 @@ def jogar():
     global MENU, fluxo_jogo, bg_anterior
     
     direcoes = 'ESQUERDA' + ' '*20 + 'DIREITA'
-    rodando = True
     cor_labels = (255, 255, 255)
     posicao_msg = (100, 100)
+    rodando = True
     
     while rodando:
         pygame.time.delay(DELAY)
@@ -325,7 +339,7 @@ def jogar():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_END:
 #                     rodando = False
-                    gera_arquivos.limpa_resultados()
+#                     gera_arquivos.limpa_resultados()
                     sys.exit()
                     
                 elif event.key == pygame.K_RETURN and bg_anterior != bg_atual:
@@ -436,6 +450,8 @@ def jogar():
         print('personagem:', p1.x, p1.y)
         print('inimigo:', inimigo.x, inimigo.y)
         pygame.display.update()
+    
+    time_fim_jogo = time.time() - time_inicio_jogo
         
         
 if __name__ == '__main__':
@@ -452,6 +468,7 @@ if __name__ == '__main__':
     fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
     
     jogar()
+    
     pygame.quit()
     form_final()
     
