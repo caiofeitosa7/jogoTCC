@@ -40,7 +40,7 @@ def salvaRespostas():
     for resposta in arrayInputs:
         respostasFormInicio.append(resposta.get('1.0', 'end').strip())
 
-    gera_arquivos.arquivo_analise(perguntas, respostasFormInicio, 'inicio')
+    gera_arquivos.excel_formulario(perguntas, respostasFormInicio, 'inicio')
     app.destroy()
     
 

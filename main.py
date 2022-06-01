@@ -338,9 +338,9 @@ def jogar():
             
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_END:
-#                     rodando = False
+                    rodando = False
 #                     gera_arquivos.limpa_resultados()
-                    sys.exit()
+#                     sys.exit()
                     
                 elif event.key == pygame.K_RETURN and bg_anterior != bg_atual:
                     fluxo_jogo += 1
@@ -450,8 +450,6 @@ def jogar():
         print('personagem:', p1.x, p1.y)
         print('inimigo:', inimigo.x, inimigo.y)
         pygame.display.update()
-    
-    time_fim_jogo = time.time() - time_inicio_jogo
         
         
 if __name__ == '__main__':
@@ -468,7 +466,11 @@ if __name__ == '__main__':
     fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
     
     jogar()
+    time_fim_jogo = time.time() - time_inicio_jogo
     
     pygame.quit()
+    
+    gera_arquivos.arquivo_analise(dir_correta, dir_jogador, time_fim_jogo)
+    
     form_final()
     

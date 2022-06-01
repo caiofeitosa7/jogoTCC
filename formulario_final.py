@@ -32,7 +32,8 @@ def salva_respostas():
     for resposta in respostas:
         respostasFormFinal.append(resposta.get('1.0', 'end'))
     
-    gera_arquivos.arquivo_analise(perguntas, respostasFormFinal, 'final')
+    gera_arquivos.excel_formulario(perguntas, respostasFormFinal, 'final')
+    gera_arquivos.compacta_arquivos()
     sys.exit()
 
     
