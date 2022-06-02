@@ -9,24 +9,24 @@ from load_assets import *
 from jogador import Personagem
 import gera_arquivos
 
-# ------ variaveis do inventario ------
-itemy = 188
-itemx = LIM_LATERAL + 31
-
-itens_encontrados = []
-pos_item_inventario = [itemx, itemy]
-
-# -------------------------------------
-
 troca_mapa = 0
-time_fim_jogo = 0
-time_inicio_jogo = 0
+tempo_fim_jogo = 0
+tempo_inicio_jogo = 0
 anima_label_pontos = 0
 
 y_fundo = - DESLOCA_MAPA_VERTICAL
 x_fundo = 0
-dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
-               ('ESQUERDA', 'DIREITA', 'ESQUERDA'), ('DIREITA', 'ESQUERDA', 'DIREITA')]    # direcoes corretas de cada calabouço
+# dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
+#                ('ESQUERDA', 'DIREITA', 'ESQUERDA'), ('DIREITA', 'ESQUERDA', 'DIREITA')]    # direcoes corretas de cada calabouço
+
+dir_correta = ['ESQUERDA', 'ESQUERDA', 'ESQUERDA',
+               'DIREITA', 'DIREITA', 'DIREITA',
+               'ESQUERDA', 'DIREITA', 'ESQUERDA',
+               'DIREITA', 'ESQUERDA', 'DIREITA',
+               'ESQUERDA', 'ESQUERDA', 'ESQUERDA',
+               'DIREITA', 'DIREITA', 'DIREITA',
+               'ESQUERDA', 'DIREITA', 'ESQUERDA',
+               'DIREITA', 'ESQUERDA', 'DIREITA']
 dir_jogador = []                      # direcao que o jogador seguiu em cada sala
 sala_atual = len(dir_jogador)         # em que sala o personagem está
 bg_atual = 0                          # background atual
@@ -34,6 +34,20 @@ bg_anterior = -1
 fluxo_jogo = 0
 fundo = mapas[bg_atual]
 volta_inicio = True
+ultimo_objeto_colidido = armadilha1
+
+tempo_label_pontua = 0
+
+
+# ------ variaveis do inventario ------
+
+itemy = 188
+itemx = LIM_LATERAL + 31
+
+itens_encontrados = []
+pos_item_inventario = [itemx, itemy]
+
+# -------------------------------------
 
 # personagem
 pos_inicial = (LIM_LATERAL/2 - 10, 360)
@@ -49,7 +63,7 @@ inimigo = orc
 
 
 def encontrou_objeto(objeto):
-    global pos_item_inventario, itemx
+    global pos_item_inventario, itemx, ultimo_objeto_colidido
     
     if objeto.descricao == 'item':
         objeto.x = pos_item_inventario[0]
@@ -63,6 +77,7 @@ def encontrou_objeto(objeto):
         else:
             pos_item_inventario[0] += 42
     
+    ultimo_objeto_colidido = objeto
     objeto.audio.play()
         
             
@@ -154,7 +169,7 @@ def escolheu_direita():
 
 # função de pontuação
 def pontua():
-    global pontos
+    global pontos, anima_label_pontos
     ganha_ponto = False
     
     if sala_atual <= 2:                           # primeiro calabouço
@@ -192,6 +207,7 @@ def pontua():
             ganha_ponto = True
     
     if ganha_ponto:
+        anima_label_pontos = 1
         audio_pontua.play()
         pontos += 3
         
@@ -254,7 +270,7 @@ def gerencia_mapa():
         volta_inicio = False
         fluxo_jogo = 2
         bg_atual = 0
-        sala_atual = 0        
+        sala_atual = -1
         
         
 # muda para a próxima sala
@@ -264,7 +280,8 @@ def atualiza_cenario():
     pontua()
     troca_mapa += 1
     gerencia_mapa()
-    sala_atual = len(dir_jogador)
+#     sala_atual = len(dir_jogador)
+    sala_atual += 1
     p1.y = pos_inicial[1]
 
 
@@ -272,7 +289,7 @@ path_personagem = 'p1'
 
 # click button
 def botao_clicado_menu():
-    global MENU, p1, path_personagem, pos_inicial
+    global MENU, p1, path_personagem, pos_inicial, tempo_inicio_jogo
     
     x, y = pygame.mouse.get_pos()
     pos_click_horizontal = y >= 200 and y <= 259
@@ -297,7 +314,7 @@ def botao_clicado_menu():
     if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):
         MENU = False
         audio_inicioJogo.play()
-        time_inicio_jogo = time.time()
+        tempo_inicio_jogo = time.time()
         p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, \
                         path = 'assets\Personagens\\' + path_personagem)
 
@@ -319,7 +336,7 @@ def menu_principal():
     
     
 def jogar():
-    global MENU, fluxo_jogo, bg_anterior
+    global MENU, fluxo_jogo, bg_anterior, anima_label_pontos
     
     direcoes = 'ESQUERDA' + ' '*20 + 'DIREITA'
     cor_labels = (255, 255, 255)
@@ -342,8 +359,11 @@ def jogar():
 #                     gera_arquivos.limpa_resultados()
 #                     sys.exit()
                     
-                elif event.key == pygame.K_RETURN and bg_anterior != bg_atual:
-                    fluxo_jogo += 1
+                elif event.key == pygame.K_RETURN:
+                    if bg_anterior != bg_atual:
+                        fluxo_jogo += 1
+                    elif p1.colidiu_objeto:
+                        p1.colidiu_objeto = False
                     
             elif MENU:
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -360,7 +380,7 @@ def jogar():
                 
                 fundo = mapas[bg_atual]
                 
-                # cenário
+                # ------ cenário ------
                 janela.blit(fundo, (x_fundo, y_fundo))
                 janela.blit(fundo_placar, (LIM_LATERAL + 10, 0))
                 janela.blit(cobre_sobra_mapa, (0, HEIGHT))
@@ -375,10 +395,12 @@ def jogar():
                 
                 
                 
-                # personagem
+                # ------ personagem ------
+                janela.blit(p1.sprite_atual, (p1.x, p1.y))
+                
+                
                 if p1.colidir(armadilha1):
-#                     janela.blit(armadilha1.mensagem, (armadilha1.x, armadilha1.y))
-                    encontrou_objeto(armadilha1)
+                    encontrou_objeto(armadilha1)                    
                     
                 elif p1.colidir(armadilha2):
                     encontrou_objeto(armadilha2)
@@ -393,14 +415,8 @@ def jogar():
                     encontrou_objeto(armadilha5)
                 
                 
-                
-                
-                
-                
-                
-                
-                janela.blit(p1.sprite_atual, (p1.x, p1.y))
-                
+                if p1.colidiu_objeto:
+                    janela.blit(ultimo_objeto_colidido.mensagem, posicao_msg)
                 
                 
                 
@@ -410,10 +426,11 @@ def jogar():
 #                         movimenta_inimigo()
 #                     janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
                 
-                # labels
+                
+                # ----- labels ------
+                
                 label = f'Pontos:{pontos}'
                 label_pontos = fonte_pontos.render(label, True, cor_labels)
-                label_pontua = fonte_pontos.render(f'+{pontos}', True, cor_labels)
 
                 janela.blit(label_pontos, (LIM_LATERAL + 30, LIM_SUPERIOR + 30))
                 
@@ -421,9 +438,19 @@ def jogar():
                     label_direcoes = fonte_dir.render(direcoes, True, (255, 255, 255))
                     janela.blit(label_direcoes, (LIM_LATERAL - 540, LIM_SUPERIOR + 35))
                 
-#                 animacao_pontos_ganhos(janela)
-#                 janela.blit(label_pontua, (LIM_LATERAL + 30, HEIGHT/2 + anima_label_pontos)
-    
+                # --------- animacao de ganhar ponto ----------
+                
+                label_pontua = fonte_pontos.render(f'+ 3', True, cor_labels)
+                
+                if anima_label_pontos != 0 and anima_label_pontos >= -60:
+                    janela.blit(label_pontua, (LIM_LATERAL//2, HEIGHT//2 - 20 + anima_label_pontos))
+                    anima_label_pontos -= 7
+                
+                if anima_label_pontos <= -60:
+                    anima_label_pontos = 0
+                
+                # ---------------------------------------------
+                
                 if fluxo_jogo % 2 != 0:
                     if fluxo_jogo == 1:
                         janela.blit(msg_rei, posicao_msg)
@@ -447,11 +474,24 @@ def jogar():
         
         
         
-        print('personagem:', p1.x, p1.y)
-        print('inimigo:', inimigo.x, inimigo.y)
+#         print('personagem:', p1.x, p1.y)
+#         print('inimigo:', inimigo.x, inimigo.y)
         pygame.display.update()
         
-        
+
+def formata_tempo(tempo_percorrido):
+    minutos = int(tempo_percorrido) // 60
+    segundos = int(tempo_percorrido) % 60
+    
+    if minutos < 10:
+        minutos = f'0{minutos}'
+    
+    if segundos < 10:
+        segundos = f'0{segundos}'
+    
+    return f'{minutos}:{segundos}'
+    
+
 if __name__ == '__main__':
     form_inicio()
     
@@ -466,11 +506,11 @@ if __name__ == '__main__':
     fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
     
     jogar()
-    time_fim_jogo = time.time() - time_inicio_jogo
+    tempo_fim_jogo = formata_tempo(time.time() - tempo_inicio_jogo)
     
     pygame.quit()
     
-    gera_arquivos.arquivo_analise(dir_correta, dir_jogador, time_fim_jogo)
+    gera_arquivos.arquivo_analise(dir_correta, dir_jogador, tempo_fim_jogo)
     
     form_final()
     

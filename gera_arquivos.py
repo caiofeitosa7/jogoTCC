@@ -6,6 +6,7 @@ import os
 
 path = r'resultados/'
 
+
 def limpa_resultados():
     for arquivo in list(os.listdir(path)):
         os.remove(path + arquivo)
@@ -37,7 +38,6 @@ def arquivo_analise(direcoes_corretas: list, direcoes_personagem: list, tempo_ga
     writer.close()
 
 
-
 def excel_formulario(perguntas: list, respostas: list, tipo_form: str):    
     nome_arquivo = f'formulario_{tipo_form}'
     
@@ -60,13 +60,3 @@ def compacta_arquivos():
         os.remove(path + arquivo)
     
     arquivo_zip.close()
-
-
-
-
-
-
-
-
-arquivo_analise([1,2,3], [3,2,1], 12)
-compacta_arquivos()

@@ -12,13 +12,14 @@ class Personagem:
     def __init__(self, x: int, y: int, largura: int, altura: int, path = 'assets\Personagens\p1'):
         self.__x = x
         self.__y = y
+        self.__path = path
         self.x_anterior = x
         self.y_anterior = y
         self.__altura = altura
         self.__largura = largura
         self.__velocidade = 20
-        self.__path = path
         self.frame_frente = True
+        self._colidiu_objeto = False
         
         #carregando sprites do personagem andando pra cima
         caminho = self.__path + '\\Cima\\'
@@ -105,7 +106,8 @@ class Personagem:
             return False
         elif self.__x >= obj.x + obj.largura:
             return False
-
+        
+        self._colidiu_objeto = True
         return True
 
 
@@ -132,6 +134,15 @@ class Personagem:
     @sprite_atual.setter
     def sprite_atual(self, sprite_atual):
         self.__sprite_atual = sprite_atual
+    
+    @property
+    def colidiu_objeto(self):
+        return self._colidiu_objeto
+        
+    @colidiu_objeto.setter
+    def colidiu_objeto(self, colidiu):
+        self._colidiu_objeto = colidiu
+    
     
     @property
     def largura(self):
