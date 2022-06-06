@@ -4,9 +4,9 @@ import pygame
 from gera_arquivos import limpa_resultados
 from formulario_inicial import form_inicio
 from formulario_final import form_final
+from jogador import Personagem
 from constantes import *
 from load_assets import *
-from jogador import Personagem
 import gera_arquivos
 
 troca_mapa = 0
@@ -34,6 +34,7 @@ bg_anterior = -1
 fluxo_jogo = 0
 fundo = mapas[bg_atual]
 volta_inicio = True
+entrou_sala_inimigo = False
 ultimo_objeto_colidido = armadilha1
 
 tempo_label_pontua = 0
@@ -54,10 +55,8 @@ pos_inicial = (LIM_LATERAL/2 - 10, 360)
 p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, path = r'assets\Personagens\p1')
 
 
-#inimigos
-orc = Personagem(x = LIM_LATERAL/2 + 30, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'assets\Personagens\orc')
-# dragao = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
-# ogro = Personagem(x = LIM_LATERAL/2 - 30, y = LIM_SUPERIOR + 40, file = '', velocidade = 10)
+# inimigos
+orc = Personagem(x = -100, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'assets\Personagens\orc')
 
 inimigo = orc
 
@@ -78,14 +77,44 @@ def encontrou_objeto(objeto):
             pos_item_inventario[0] += 42
     
     ultimo_objeto_colidido = objeto
-    objeto.audio.play()
+    objeto.audio.play()  
+
+
+def verifica_entrou_sala_inimigo():
+    global entrou_sala_inimigo, inimigo
+    
+    entrou_sala_inimigo = False
+    
+    if sala_atual == 4 and dir_jogador[-1] == 'ESQUERDA':
+        entrou_sala_inimigo = True
+        inimigo = Personagem(x = LIM_LATERAL/2 + 30,
+                             y = LIM_SUPERIOR,
+                             largura = 28,
+                             altura = 57,
+                             path = r'assets\Personagens\orc')
         
-            
+    if sala_atual == 8 and dir_jogador[-1] == 'ESQUERDA':
+        entrou_sala_inimigo = True
+        inimigo = Personagem(x = LIM_LATERAL/2 - 30,
+                             y = LIM_SUPERIOR + 40,
+                             largura = 32,
+                             altura = 65,
+                             path = r'assets\Personagens\ogro')
+    
+    if sala_atual == 11:
+        entrou_sala_inimigo = True
+        inimigo = Personagem(x = LIM_LATERAL/2 - 30,
+                             y = LIM_SUPERIOR + 40,
+                             largura = 32,
+                             altura = 65,
+                             path = r'assets\Personagens\dragao')
+    
+    
 # movimentacao do inimigo
 def movimenta_inimigo():
     dif_y = abs(inimigo.y - p1.y) > 50
     dif_x = abs(inimigo.x - p1.x) > 20
-    
+
     if inimigo.x <= p1.x and dif_x:    # RIGHT
         inimigo.movimenta('d')
     elif inimigo.x >= p1.x and dif_x:  # LEFT
@@ -100,27 +129,27 @@ def movimenta_inimigo():
 def movimenta_personagem(comandos):
     h = p1.altura
     w = p1.largura
-    
+
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
-        
+
         if sala_atual == 24:
             if p1.y < 18:
                 p1.movimenta('b')
         else:
             if (p1.x + w > 108 and p1.x < 500) and p1.y < LIM_SUPERIOR:
                 p1.movimenta('b')
-            
+
     elif comandos[pygame.K_DOWN]:
         p1.movimenta('b')
-        
+
         if sala_atual == 24:
             if p1.y + h >= 460:
                 p1.movimenta('c')
         else:
             if p1.y + h >= 472:
                 p1.movimenta('c')
-                
+
             elif troca_mapa == 0:
                 if (p1.x <= 194 or p1.x + w >= 413) and p1.y + h >= 290:
                     p1.movimenta('c')
@@ -130,7 +159,7 @@ def movimenta_personagem(comandos):
                 
                 elif dir_jogador[-1] == 'DIREITA' and p1.y + h >= 290 and p1.x >= 108:
                     p1.movimenta('c')
-            
+
     elif comandos[pygame.K_RIGHT]:
         p1.movimenta('d')
         
@@ -283,6 +312,7 @@ def atualiza_cenario():
 #     sala_atual = len(dir_jogador)
     sala_atual += 1
     p1.y = pos_inicial[1]
+    verifica_entrou_sala_inimigo()
 
 
 path_personagem = 'p1'
@@ -337,6 +367,7 @@ def menu_principal():
     
 def jogar():
     global MENU, fluxo_jogo, bg_anterior, anima_label_pontos
+    global ultimo_objeto_colidido, entrou_sala_inimigo, pontos
     
     direcoes = 'ESQUERDA' + ' '*20 + 'DIREITA'
     cor_labels = (255, 255, 255)
@@ -413,18 +444,28 @@ def jogar():
                 
                 elif p1.colidir(armadilha5):
                     encontrou_objeto(armadilha5)
-                
+
+
+                # inimigo
+                if entrou_sala_inimigo:
+                    if not p1.colidir(inimigo):
+                        janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
+                        movimenta_inimigo()
+                    else:
+                        ultimo_objeto_colidido = inimigo
+                        entrou_sala_inimigo = False
+                        audio_decrease.play()
+                        inimigo.x = -100
+                        
                 
                 if p1.colidiu_objeto:
-                    janela.blit(ultimo_objeto_colidido.mensagem, posicao_msg)
+                    if type(ultimo_objeto_colidido) == Objeto:
+                        janela.blit(ultimo_objeto_colidido.mensagem, posicao_msg)
+                    else:
+                        janela.blit(msg_atacado, (posicao_msg))
+                        
+                        
                 
-                
-                
-                # inimigo
-#                 if sala_atual == 1:
-#                     if p1.y <= 400:
-#                         movimenta_inimigo()
-#                     janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
                 
                 
                 # ----- labels ------
