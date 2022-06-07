@@ -1,7 +1,6 @@
 class Objeto:
-    def __init__(self, x: int, y: int, largura: int, altura: int, figura: str, msg, audio, desc):
-        self._x = x
-        self._y = y
+    def __init__(self, posicao: tuple, largura: int, altura: int, figura: str, msg, audio, desc):
+        self._x, self._y = posicao
         self._altura = altura
         self._largura = largura
         self._figura = figura

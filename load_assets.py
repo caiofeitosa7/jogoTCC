@@ -50,20 +50,36 @@ path = r'assets\itens\\'
 files = os.listdir(path)
 figura_itens = [pygame.image.load(path + item) for item in sorted(files)]
 
-armadilha1 = Objeto(200, 200, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
-armadilha2 = Objeto(200, 250, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
-armadilha3 = Objeto(200, 150, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
-armadilha4 = Objeto(250, 250, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
-armadilha5 = Objeto(250, 150, 34, 38, figura_itens[2], msg_atacado, audio_click, 'item')
+lado_figura = 30
+posicao_item = (200, 250)
 
+itens = {
+    'labirinto_orc': [
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[1], msg_atacado, audio_click, 'item'),
+    ],
+    'labirinto_ogro': [
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[1], msg_atacado, audio_click, 'item'),
+    ],
+    'labirinto_dragao': [
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[1], msg_atacado, audio_click, 'item'),
+    ]
+}
 
-
-
-
-
-
-
-
+# loc_armadilha = ()
+# 
+# armadilhas = [
+#     Objeto(loc_armadilha, , , figura_itens[0], msg_atacado, audio_armadilha, 'armadilha'),
+#     Objeto(loc_armadilha, , , figura_itens[1], msg_atacado, audio_armadilha, 'armadilha'),
+# ]
 
 
 # menu = pygame.image.load(r'menu\menu_principal.png')

@@ -1,12 +1,13 @@
 import sys
 import time
 import pygame
+import random
 from gera_arquivos import limpa_resultados
 from formulario_inicial import form_inicio
 from formulario_final import form_final
 from jogador import Personagem
-from constantes import *
 from load_assets import *
+from constantes import *
 import gera_arquivos
 
 troca_mapa = 0
@@ -14,8 +15,8 @@ tempo_fim_jogo = 0
 tempo_inicio_jogo = 0
 anima_label_pontos = 0
 
-y_fundo = - DESLOCA_MAPA_VERTICAL
 x_fundo = 0
+y_fundo = - DESLOCA_MAPA_VERTICAL
 # dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
 #                ('ESQUERDA', 'DIREITA', 'ESQUERDA'), ('DIREITA', 'ESQUERDA', 'DIREITA')]    # direcoes corretas de cada calabouço
 
@@ -34,10 +35,11 @@ bg_anterior = -1
 fluxo_jogo = 0
 fundo = mapas[bg_atual]
 volta_inicio = True
+entrou_sala_item = False
 entrou_sala_inimigo = False
-ultimo_objeto_colidido = armadilha1
-
-tempo_label_pontua = 0
+entrou_sala_armadilha = False
+item_da_vez = itens['labirinto_orc'][0]
+ultimo_objeto_colidido = itens['labirinto_orc'][0]
 
 
 # ------ variaveis do inventario ------
@@ -48,17 +50,16 @@ itemx = LIM_LATERAL + 31
 itens_encontrados = []
 pos_item_inventario = [itemx, itemy]
 
-# -------------------------------------
 
-# personagem
+# ------------ personagem -------------
+
 pos_inicial = (LIM_LATERAL/2 - 10, 360)
 p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, path = r'assets\Personagens\p1')
 
 
-# inimigos
-orc = Personagem(x = -100, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'assets\Personagens\orc')
+# ------------- inimigos --------------
 
-inimigo = orc
+inimigo = Personagem(x = -100, y = LIM_SUPERIOR, largura = 28, altura = 57, path = r'assets\Personagens\orc')
 
 
 def encontrou_objeto(objeto):
@@ -75,10 +76,41 @@ def encontrou_objeto(objeto):
             pos_item_inventario[1] += 42
         else:
             pos_item_inventario[0] += 42
-    
+        
     ultimo_objeto_colidido = objeto
-    objeto.audio.play()  
+    objeto.audio.play()
 
+
+def verifica_entrou_sala_item():
+    global item_da_vez, entrou_sala_item
+    
+    entrou_sala_item = False
+    
+    if sala_atual == 1 and dir_jogador[-1] == 'ESQUERDA':
+        item_da_vez = itens['labirinto_orc'][random.randint(0,len(itens['labirinto_orc'])-1)]
+#         itens['labirinto_orc'].remove(item_da_vez)
+        entrou_sala_item = True
+        
+        
+        
+#     if sala_atual == 5 and dir_jogador[-1] == 'DIREITA':
+#         entrou_sala_item = True
+#         
+#         
+#     if sala_atual == 7 and dir_jogador[-1] == 'ESQUERDA':
+#         entrou_sala_item = True
+#         
+#     if sala_atual == 11 and dir_jogador[-1] == 'DIREITA':
+#         entrou_sala_item = True
+        
+    
+    
+
+def verifica_entrou_sala_armadilha():
+    if (sala_atual == 5 and dir_anterior[-1] == 'ESQUERDA') or sala_atual == 8:
+        entrou_sala_armadilha = True
+    entrou_sala_armadilha = False
+    
 
 def verifica_entrou_sala_inimigo():
     global entrou_sala_inimigo, inimigo
@@ -312,6 +344,7 @@ def atualiza_cenario():
 #     sala_atual = len(dir_jogador)
     sala_atual += 1
     p1.y = pos_inicial[1]
+    verifica_entrou_sala_item()
     verifica_entrou_sala_inimigo()
 
 
@@ -395,11 +428,11 @@ def jogar():
                         fluxo_jogo += 1
                     elif p1.colidiu_objeto:
                         p1.colidiu_objeto = False
-                    
+                
             elif MENU:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     botao_clicado_menu()
-        
+                
         if fluxo_jogo >= 1:
             if not MENU:               
                 p1.x_anterior = p1.x
@@ -411,42 +444,34 @@ def jogar():
                 
                 fundo = mapas[bg_atual]
                 
-                # ------ cenário ------
+                
+                # --------- cenário ---------
+                
                 janela.blit(fundo, (x_fundo, y_fundo))
                 janela.blit(fundo_placar, (LIM_LATERAL + 10, 0))
                 janela.blit(cobre_sobra_mapa, (0, HEIGHT))
-
-
-
-                janela.blit(armadilha1.figura, (armadilha1.x, armadilha1.y))
-                janela.blit(armadilha2.figura, (armadilha2.x, armadilha2.y))
-                janela.blit(armadilha3.figura, (armadilha3.x, armadilha3.y))
-                janela.blit(armadilha4.figura, (armadilha4.x, armadilha4.y))
-                janela.blit(armadilha5.figura, (armadilha5.x, armadilha5.y))
                 
                 
+                # -------- personagem -------
                 
-                # ------ personagem ------
                 janela.blit(p1.sprite_atual, (p1.x, p1.y))
                 
                 
-                if p1.colidir(armadilha1):
-                    encontrou_objeto(armadilha1)                    
-                    
-                elif p1.colidir(armadilha2):
-                    encontrou_objeto(armadilha2)
+                # ---------- itens ----------
                 
-                elif p1.colidir(armadilha3):
-                    encontrou_objeto(armadilha3)
-                    
-                elif p1.colidir(armadilha4):
-                    encontrou_objeto(armadilha4)
+                if entrou_sala_item:
+                    if not p1.colidir(item_da_vez):
+                        janela.blit(item_da_vez.figura, (item_da_vez.x, item_da_vez.y))
+                    else:
+                        encontrou_objeto(item_da_vez)
                 
-                elif p1.colidir(armadilha5):
-                    encontrou_objeto(armadilha5)
-
-
-                # inimigo
+                
+                for item in itens_encontrados:
+                    janela.blit(item.figura, (item_da_vez.x, item_da_vez.y))
+                    
+                    
+                # --------- inimigo ---------
+                
                 if entrou_sala_inimigo:
                     if not p1.colidir(inimigo):
                         janela.blit(inimigo.sprite_atual, (inimigo.x, inimigo.y))
@@ -456,19 +481,17 @@ def jogar():
                         entrou_sala_inimigo = False
                         audio_decrease.play()
                         inimigo.x = -100
-                        
-                
+                        pontos -= 3
+
+
                 if p1.colidiu_objeto:
                     if type(ultimo_objeto_colidido) == Objeto:
                         janela.blit(ultimo_objeto_colidido.mensagem, posicao_msg)
                     else:
                         janela.blit(msg_atacado, (posicao_msg))
-                        
-                        
                 
                 
-                
-                # ----- labels ------
+                # ------------------- labels ------------------
                 
                 label = f'Pontos:{pontos}'
                 label_pontos = fonte_pontos.render(label, True, cor_labels)
@@ -478,6 +501,7 @@ def jogar():
                 if p1.y <= LIM_SUPERIOR + 90 and sala_atual != 24:
                     label_direcoes = fonte_dir.render(direcoes, True, (255, 255, 255))
                     janela.blit(label_direcoes, (LIM_LATERAL - 540, LIM_SUPERIOR + 35))
+                
                 
                 # --------- animacao de ganhar ponto ----------
                 
@@ -490,7 +514,8 @@ def jogar():
                 if anima_label_pontos <= -60:
                     anima_label_pontos = 0
                 
-                # ---------------------------------------------
+                
+                # --------------- fluxo de jogo ----------------
                 
                 if fluxo_jogo % 2 != 0:
                     if fluxo_jogo == 1:
@@ -515,7 +540,7 @@ def jogar():
         
         
         
-#         print('personagem:', p1.x, p1.y)
+        print('personagem:', p1.x, p1.y)
 #         print('inimigo:', inimigo.x, inimigo.y)
         pygame.display.update()
         
