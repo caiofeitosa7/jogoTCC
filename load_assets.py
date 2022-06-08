@@ -74,15 +74,9 @@ itens = {
     ]
 }
 
-# loc_armadilha = ()
-# 
-# armadilhas = [
-#     Objeto(loc_armadilha, , , figura_itens[0], msg_atacado, audio_armadilha, 'armadilha'),
-#     Objeto(loc_armadilha, , , figura_itens[1], msg_atacado, audio_armadilha, 'armadilha'),
-# ]
+loc_armadilha = (527, 290)
 
-
-# menu = pygame.image.load(r'menu\menu_principal.png')
-# jogar_hover = pygame.image.load(r'menu\jogar_hover.png')
-# personagem_hover = pygame.image.load(r'menu\personagem_hover.png')
-# sair_hover = pygame.image.load(r'menu\sair_hover.png')
+armadilhas = [
+    Objeto(loc_armadilha, 34, 38, figura_itens[0], msg_atacado, audio_armadilha, 'armadilha'),
+    Objeto(loc_armadilha, 37, 40, figura_itens[1], msg_atacado, audio_armadilha, 'armadilha'),
+]

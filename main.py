@@ -77,6 +77,8 @@ def encontrou_objeto(objeto):
             pos_item_inventario[1] += 42
         else:
             pos_item_inventario[0] += 42
+    else:
+        objeto.x = -100
         
     ultimo_objeto_colidido = objeto
     objeto.audio.play()
@@ -103,9 +105,19 @@ def verifica_entrou_sala_item():
     
 
 def verifica_entrou_sala_armadilha():
-    if (sala_atual == 5 and dir_anterior[-1] == 'ESQUERDA') or sala_atual == 8:
-        entrou_sala_armadilha = True
+    global item_da_vez, entrou_sala_armadilha
+    
     entrou_sala_armadilha = False
+    
+    if (sala_atual == 5 and dir_jogador[-1] == 'ESQUERDA') or sala_atual == 8:
+        item_da_vez = armadilhas[random.randint(0,len(armadilhas)-1)]
+        armadilhas.remove(item_da_vez)
+        entrou_sala_armadilha = True
+            
+        if dir_jogador[-1] == 'ESQUERDA':
+            item_da_vez.x, item_da_vez.y = (527, 290)
+        else:
+            item_da_vez.x, item_da_vez.y = (30, 290)
     
 
 def verifica_entrou_sala_inimigo():
@@ -341,6 +353,7 @@ def atualiza_cenario():
     p1.y = pos_inicial[1]
     verifica_entrou_sala_item()
     verifica_entrou_sala_inimigo()
+    verifica_entrou_sala_armadilha()
 
 
 path_personagem = 'p1'
@@ -452,13 +465,24 @@ def jogar():
                 janela.blit(p1.sprite_atual, (p1.x, p1.y))
                 
                 
+                # ------- armadilhas --------
+                
+#                 if entrou_sala_armadilha:
+#                     if not p1.colidir(item_da_vez):
+#                         janela.blit(item_da_vez.figura, (item_da_vez.x, item_da_vez.y))
+#                     else:
+#                         encontrou_objeto(item_da_vez)
+#                 
+                
                 # ---------- itens ----------
                 
-                if entrou_sala_item:
+                if entrou_sala_item or entrou_sala_armadilha:
                     if not p1.colidir(item_da_vez):
                         janela.blit(item_da_vez.figura, (item_da_vez.x, item_da_vez.y))
                     else:
                         encontrou_objeto(item_da_vez)
+                        
+                        
                 
                 for item in itens_encontrados:
                     janela.blit(item.figura, (item.x, item.y))
@@ -482,7 +506,7 @@ def jogar():
                     if type(ultimo_objeto_colidido) == Objeto:
                         janela.blit(ultimo_objeto_colidido.mensagem, posicao_msg)
                     else:
-                        janela.blit(msg_atacado, (posicao_msg))
+                        janela.blit(msg_atacado, posicao_msg)
                 
                 
                 # ------------------- labels ------------------
