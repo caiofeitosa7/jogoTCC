@@ -51,26 +51,26 @@ files = os.listdir(path)
 figura_itens = [pygame.image.load(path + item) for item in sorted(files)]
 
 lado_figura = 30
-posicao_item = (200, 250)
+posicao_item = (300, 150)
 
 itens = {
     'labirinto_orc': [
         Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[1], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
     ],
     'labirinto_ogro': [
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
         Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[1], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
     ],
     'labirinto_dragao': [
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_atacado, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_atacado, audio_click, 'item'),
         Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[1], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_atacado, audio_click, 'item'),
     ]
 }
 

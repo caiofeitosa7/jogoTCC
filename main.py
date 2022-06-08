@@ -1,5 +1,6 @@
 import sys
 import time
+import itens
 import pygame
 import random
 from gera_arquivos import limpa_resultados
@@ -63,7 +64,7 @@ inimigo = Personagem(x = -100, y = LIM_SUPERIOR, largura = 28, altura = 57, path
 
 
 def encontrou_objeto(objeto):
-    global pos_item_inventario, itemx, ultimo_objeto_colidido
+    global pos_item_inventario, itemx, itemy, ultimo_objeto_colidido
     
     if objeto.descricao == 'item':
         objeto.x = pos_item_inventario[0]
@@ -84,26 +85,21 @@ def encontrou_objeto(objeto):
 def verifica_entrou_sala_item():
     global item_da_vez, entrou_sala_item
     
+    labirinto = ''
     entrou_sala_item = False
     
-    if sala_atual == 1 and dir_jogador[-1] == 'ESQUERDA':
-        item_da_vez = itens['labirinto_orc'][random.randint(0,len(itens['labirinto_orc'])-1)]
-#         itens['labirinto_orc'].remove(item_da_vez)
-        entrou_sala_item = True
-        
-        
-        
-#     if sala_atual == 5 and dir_jogador[-1] == 'DIREITA':
-#         entrou_sala_item = True
-#         
-#         
-#     if sala_atual == 7 and dir_jogador[-1] == 'ESQUERDA':
-#         entrou_sala_item = True
-#         
-#     if sala_atual == 11 and dir_jogador[-1] == 'DIREITA':
-#         entrou_sala_item = True
-        
+    if (sala_atual == 1 and dir_jogador[-1] == 'ESQUERDA') or \
+       (sala_atual == 5 and dir_jogador[-1] == 'DIREITA'):
+        labirinto = 'labirinto_orc'
+    elif sala_atual == 7 and dir_jogador[-1] == 'ESQUERDA':
+        labirinto = 'labirinto_ogro'
+    elif sala_atual == 11 and dir_jogador[-1] == 'DIREITA':
+        labirinto = 'labirinto_dragao'
     
+    if labirinto:
+        item_da_vez = itens[labirinto][random.randint(0,len(itens[labirinto])-1)]
+        itens[labirinto].remove(item_da_vez)
+        entrou_sala_item = True
     
 
 def verifica_entrou_sala_armadilha():
@@ -341,7 +337,6 @@ def atualiza_cenario():
     pontua()
     troca_mapa += 1
     gerencia_mapa()
-#     sala_atual = len(dir_jogador)
     sala_atual += 1
     p1.y = pos_inicial[1]
     verifica_entrou_sala_item()
@@ -465,9 +460,8 @@ def jogar():
                     else:
                         encontrou_objeto(item_da_vez)
                 
-                
                 for item in itens_encontrados:
-                    janela.blit(item.figura, (item_da_vez.x, item_da_vez.y))
+                    janela.blit(item.figura, (item.x, item.y))
                     
                     
                 # --------- inimigo ---------

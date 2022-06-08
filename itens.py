@@ -7,7 +7,7 @@ class Objeto:
         self._mensagem = msg
         self._audio = audio
         self._descricao = desc
-        
+
     @property
     def x(self):
         return self._x
@@ -47,4 +47,3 @@ class Objeto:
     @property
     def descricao(self):
         return self._descricao
-    
