@@ -16,6 +16,7 @@ tempo_fim_jogo = 0
 tempo_inicio_jogo = 0
 anima_label_pontos = 0
 
+MENU = not MENU
 x_fundo = 0
 y_fundo = - DESLOCA_MAPA_VERTICAL
 # dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
@@ -111,6 +112,7 @@ def verifica_entrou_sala_armadilha():
     
     if (sala_atual == 5 and dir_jogador[-1] == 'ESQUERDA') or sala_atual == 8:
         item_da_vez = armadilhas[random.randint(0,len(armadilhas)-1)]
+        armadilhas.remove(item_da_vez)
         entrou_sala_armadilha = True
             
         if dir_jogador[-1] == 'ESQUERDA':
@@ -353,56 +355,6 @@ def atualiza_cenario():
     verifica_entrou_sala_item()
     verifica_entrou_sala_inimigo()
     verifica_entrou_sala_armadilha()
-
-
-path_personagem = 'p1'
-
-# click button
-def botao_clicado_menu():
-    global MENU, p1, path_personagem, pos_inicial, tempo_inicio_jogo
-    
-    x, y = pygame.mouse.get_pos()
-    pos_click_horizontal = y >= 200 and y <= 259
-    
-    if pos_click_horizontal:
-        if x >= 203 and x <= 262:
-            audio_click.play()
-            path_personagem = 'p1'
-            
-        elif x >= 281 and x <= 341:
-            audio_click.play()
-            path_personagem = 'p3'
-            
-        elif x >= 360 and x <= 421:
-            audio_click.play()
-            path_personagem = 'p2'
-            
-        elif x >= 439 and x <= 500:
-            audio_click.play()
-            path_personagem = 'p4'
-            
-    if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):
-        MENU = False
-        audio_inicioJogo.play()
-        tempo_inicio_jogo = time.time()
-        p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, \
-                        path = 'assets\Personagens\\' + path_personagem)
-
-
-# menu principal
-def menu_principal():
-    global MENU
-    
-    MENU = True
-    
-    if path_personagem == 'p1':
-        janela.blit(menu_personagens[0], (0, 0))
-    elif path_personagem == 'p2':
-        janela.blit(menu_personagens[2], (0, 0))
-    elif path_personagem == 'p3':
-        janela.blit(menu_personagens[1], (0, 0))
-    else:
-        janela.blit(menu_personagens[3], (0, 0))
     
     
 def jogar():
@@ -427,8 +379,6 @@ def jogar():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_END:
                     rodando = False
-#                     gera_arquivos.limpa_resultados()
-#                     sys.exit()
                     
                 elif event.key == pygame.K_RETURN:
                     if bg_anterior != bg_atual:
@@ -471,7 +421,7 @@ def jogar():
                         janela.blit(item_da_vez.figura, (item_da_vez.x, item_da_vez.y))
                     else:
                         encontrou_objeto(item_da_vez)
-                        
+                    
                 for item in itens_encontrados:
                     janela.blit(item.figura, (item.x, item.y))
                     
@@ -539,34 +489,10 @@ def jogar():
         else:
             janela.blit(abertura, (0,0))
         
-        
-        
-        
-        
-        
-        
-        
-        print('personagem:', p1.x, p1.y)
-#         print('inimigo:', inimigo.x, inimigo.y)
         pygame.display.update()
-        
-
-def formata_tempo(tempo_percorrido):
-    minutos = int(tempo_percorrido) // 60
-    segundos = int(tempo_percorrido) % 60
-    
-    if minutos < 10:
-        minutos = f'0{minutos}'
-    
-    if segundos < 10:
-        segundos = f'0{segundos}'
-    
-    return f'{minutos}:{segundos}'
-    
+          
 
 if __name__ == '__main__':
-    form_inicio()
-    
     # criando a janela
     pygame.init()
     pygame.display.set_caption("Lost Kingdom")
@@ -578,11 +504,6 @@ if __name__ == '__main__':
     fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
     
     jogar()
-    tempo_fim_jogo = formata_tempo(time.time() - tempo_inicio_jogo)
-    
-    pygame.quit()
-    
-    gera_arquivos.arquivo_analise(dir_correta, dir_jogador, tempo_fim_jogo)
-    
-    form_final()
+
+pygame.quit()
     
