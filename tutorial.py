@@ -326,7 +326,7 @@ def gerencia_mapa():
     if fundo == sala_rei:
         x_fundo = 0
         y_fundo = - DESLOCA_MAPA_VERTICAL
-        
+    
     if troca_mapa == 3:
         x_fundo = 0
         y_fundo = - DESLOCA_MAPA_VERTICAL
@@ -341,8 +341,8 @@ def gerencia_mapa():
         fluxo_jogo = 2
         bg_atual = 0
         sala_atual = -1
-        
-        
+    
+    
 # muda para a próxima sala
 def atualiza_cenario():
     global sala_atual, troca_mapa
@@ -396,7 +396,7 @@ def jogar():
                 p1.y_anterior = p1.y
                 movimenta_personagem(pygame.key.get_pressed())
                 
-                if p1.y <= LIM_SUPERIOR and fundo != sala_rei:
+                if p1.y <= LIM_SUPERIOR and fundo != sala_rei and sala_atual :
                     atualiza_cenario()
                 
                 fundo = mapas[bg_atual]

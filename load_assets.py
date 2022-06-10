@@ -58,6 +58,10 @@ msg_flexa = pygame.image.load(path + r'\msgFlexa.jpg')
 msg_cajado_mago = pygame.image.load(path + r'\msgCajadoMago.jpg')
 msg_espada_vorpal = pygame.image.load(path + r'\msgEspadaVorpal.jpg')
 
+caminho = r'assets\msg_tutorial\\'
+files = os.listdir(caminho)
+msg_tutorial = [pygame.image.load(caminho + file) for file in sorted(files)]
+
 # -------------------- Carregando itens -------------------------
 path = r'assets\itens\\'
 files = os.listdir(path)
