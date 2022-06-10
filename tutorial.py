@@ -3,13 +3,9 @@ import time
 import itens
 import pygame
 import random
-from gera_arquivos import limpa_resultados
-from formulario_inicial import form_inicio
-from formulario_final import form_final
 from jogador import Personagem
 from load_assets import *
 from constantes import *
-import gera_arquivos
 
 troca_mapa = 0
 tempo_fim_jogo = 0
@@ -55,7 +51,7 @@ pos_item_inventario = [itemx, itemy]
 
 # ------------ personagem -------------
 
-pos_inicial = (LIM_LATERAL/2 - 10, 360)
+pos_inicial = (LIM_LATERAL/2 - 10, 400)
 p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, path = r'assets\Personagens\p1')
 
 
@@ -174,7 +170,7 @@ def movimenta_personagem(comandos):
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
 
-        if sala_atual == 24:
+        if sala_atual == 1:
             if p1.y < 18:
                 p1.movimenta('b')
         else:
@@ -229,7 +225,7 @@ def movimenta_personagem(comandos):
                 if dir_jogador[-1] == 'ESQUERDA' and p1.y + h >= 290 and p1.x < 500:
                     p1.movimenta('d')
         
-
+        
 # função que verifica se o personagem foi pela direita
 def escolheu_direita():
     if p1.x > LIM_LATERAL / 2 :
@@ -364,13 +360,11 @@ def jogar():
     direcoes = 'ESQUERDA' + ' '*20 + 'DIREITA'
     cor_labels = (255, 255, 255)
     posicao_msg = (100, 100)
+    chegou_em_cima = False
     rodando = True
     
     while rodando:
         pygame.time.delay(DELAY)
-        
-        if fluxo_jogo % 2 == 0 and fluxo_jogo:
-            bg_anterior = bg_atual
             
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -383,6 +377,11 @@ def jogar():
                 elif event.key == pygame.K_RETURN:
                     if bg_anterior != bg_atual:
                         fluxo_jogo += 1
+                        audio_click.play()
+                        
+                        if fluxo_jogo == 7:
+                            rodando = False
+                        
                     elif p1.colidiu_objeto:
                         p1.colidiu_objeto = False
                 
@@ -396,7 +395,7 @@ def jogar():
                 p1.y_anterior = p1.y
                 movimenta_personagem(pygame.key.get_pressed())
                 
-                if p1.y <= LIM_SUPERIOR and fundo != sala_rei and sala_atual :
+                if p1.y <= LIM_SUPERIOR and fundo != sala_rei and sala_atual <= 1:
                     atualiza_cenario()
                 
                 fundo = mapas[bg_atual]
@@ -464,7 +463,7 @@ def jogar():
                 label_pontua = fonte_pontos.render(f'+ 3', True, cor_labels)
                 
                 if anima_label_pontos != 0 and anima_label_pontos >= -60:
-                    janela.blit(label_pontua, (LIM_LATERAL//2, HEIGHT//2 - 20 + anima_label_pontos))
+                    janela.blit(label_pontua, (LIM_LATERAL//2, HEIGHT//2 - 40 + anima_label_pontos))
                     anima_label_pontos -= 7
                 
                 if anima_label_pontos <= -60:
@@ -473,17 +472,24 @@ def jogar():
                 
                 # --------------- fluxo de jogo ----------------
                 
-                if fluxo_jogo % 2 != 0:
-                    if fluxo_jogo == 1:
-                        janela.blit(msg_rei, posicao_msg)
-                    elif fluxo_jogo == 3:
-                        janela.blit(msg_orc, posicao_msg)
-                    elif fluxo_jogo == 5:
-                        janela.blit(msg_ogro, posicao_msg)
-                    elif fluxo_jogo == 7:
-                        janela.blit(msg_dragao, posicao_msg)
-                    elif fluxo_jogo == 9:
-                        janela.blit(msg_form_final, posicao_msg)
+                if fluxo_jogo == 1:
+                    janela.blit(msg_tutorial[fluxo_jogo-1], posicao_msg)
+                elif fluxo_jogo == 2:
+                    janela.blit(msg_tutorial[fluxo_jogo-1], posicao_msg)
+                elif fluxo_jogo == 3:
+                    janela.blit(msg_tutorial[fluxo_jogo-1], (100, 260))
+                    
+                    if p1.y > LIM_SUPERIOR + 60 and not chegou_em_cima:
+                        p1.movimenta('c')
+                    else:
+                        chegou_em_cima = True                        
+                    
+                elif fluxo_jogo == 4:
+                    janela.blit(msg_tutorial[fluxo_jogo-1], (130, 180))
+                elif fluxo_jogo == 5:
+                    janela.blit(msg_tutorial[fluxo_jogo-1], (130, 50))
+                elif fluxo_jogo == 6:
+                    janela.blit(msg_tutorial[fluxo_jogo-1], posicao_msg)
             else:
                 menu_principal()
         else:
