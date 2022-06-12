@@ -18,9 +18,6 @@ anima_label_pontos = 0
 
 x_fundo = 0
 y_fundo = - DESLOCA_MAPA_VERTICAL
-# dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
-#                ('ESQUERDA', 'DIREITA', 'ESQUERDA'), ('DIREITA', 'ESQUERDA', 'DIREITA')]    # direcoes corretas de cada calabouço
-
 dir_correta = ['ESQUERDA', 'ESQUERDA', 'ESQUERDA',
                'DIREITA', 'DIREITA', 'DIREITA',
                'ESQUERDA', 'DIREITA', 'ESQUERDA',

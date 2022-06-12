@@ -40,7 +40,8 @@ path = r'assets\mensagens'
 msg_rei = pygame.image.load(path + r'\msgRei.png')
 msg_atacado = pygame.image.load(path + r'\msgAtacado.png')
 msg_form_final = pygame.image.load(path + r'\msgFormFinal.png')
-msg_nao_encontrou = pygame.image.load(path + r'\msgNaoEncontrou.png')
+msg_nao_encontrou = pygame.image.load(path + r'\msg_encontrou_nada.jpg')
+msg_armadilha = pygame.image.load(path + r'\msg_armadilha.jpg')
 msg_dragao = pygame.image.load(path + r'\popDragao.png')
 msg_ogro = pygame.image.load(path + r'\popOgro.png')
 msg_orc = pygame.image.load(path + r'\popOrc.png')
@@ -70,30 +71,31 @@ figura_itens = [pygame.image.load(path + item) for item in sorted(files)]
 lado_figura = 30
 posicao_item = (300, 150)
 
+mitril = pygame.image.load(path + 'a7.png')
+
+
 itens = {
     'labirinto_orc': [
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_cotaMitril, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_capacete, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_broquel, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_espada_lunar, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, mitril, msg_cotaMitril, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[9], msg_capacete, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[7], msg_broquel, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[2], msg_espada_lunar, audio_click, 'item'),
     ],
     'labirinto_ogro': [
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_manopla, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_botas, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_esfera, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_tacape, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[10], msg_manopla, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[11], msg_botas, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[6], msg_esfera, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[5], msg_tacape, audio_click, 'item'),
     ],
     'labirinto_dragao': [
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_moedas, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_flexa, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[12], msg_moedas, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[13], msg_flexa, audio_click, 'item'),
         Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_cajado_mago, audio_click, 'item'),
-        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[4], msg_espada_vorpal, audio_click, 'item'),
+        Objeto(posicao_item, lado_figura, lado_figura, figura_itens[3], msg_espada_vorpal, audio_click, 'item'),
     ]
 }
 
-loc_armadilha = (527, 290)
-
 armadilhas = [
-    Objeto(loc_armadilha, 34, 38, figura_itens[0], msg_atacado, audio_armadilha, 'armadilha'),
-    Objeto(loc_armadilha, 37, 40, figura_itens[1], msg_atacado, audio_armadilha, 'armadilha'),
+    Objeto((527, 290), 34, 38, figura_itens[0], msg_armadilha, audio_armadilha, 'armadilha'),
+    Objeto((527, 290), 37, 40, figura_itens[1], msg_armadilha, audio_armadilha, 'armadilha'),
 ]
