@@ -373,7 +373,7 @@ def gerencia_mapa():
             itens_labirinto = itens['labirinto_dragao']
             inimigo = Personagem(x = LIM_LATERAL/2 - 30,
                              y = LIM_SUPERIOR + 40,
-                             largura = 32, altura = 65,
+                             largura = 60, altura = 50,
                              path = r'assets\Personagens\dragao')
         
         
@@ -581,10 +581,6 @@ def jogar():
                 menu_principal()
         else:
             janela.blit(abertura, (0,0))
-        
-        
-        
-        
         
         
         
