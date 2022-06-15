@@ -15,7 +15,7 @@ def limpa_resultados():
 def arquivo_analise(direcoes_corretas: list, direcoes_personagem: list, tempo_gasto):
     dir_corretas = pd.DataFrame({'DIRECOES_CORRETAS': direcoes_corretas})
     dir_personagem = pd.DataFrame({'DIRECOES_ESCOLHIDAS': direcoes_personagem})
-    tempo_jogo = pd.DataFrame({'TEMPO_DE_JOGO': [tempo_gasto]})
+    tempo_jogo = pd.DataFrame({'TEMPO_DE_JOGO': tempo_gasto})
     
     writer = pd.ExcelWriter(f'{path}analise_jogo.xlsx', engine='openpyxl')
     

@@ -143,7 +143,6 @@ class Personagem:
     def colidiu_objeto(self, colidiu):
         self._colidiu_objeto = colidiu
     
-    
     @property
     def largura(self):
         return self.__largura
@@ -155,4 +154,9 @@ class Personagem:
     @property
     def velocidade(self):
         return self.__velocidade
+    
+    @property
+    def path(self):
+        return self.__path
+    
     
