@@ -7,6 +7,7 @@ from jogador import Personagem
 from load_assets import *
 from constantes import *
 
+pontos = 0
 troca_mapa = 0
 tempo_fim_jogo = 0
 tempo_inicio_jogo = 0
@@ -15,9 +16,6 @@ anima_label_pontos = 0
 MENU = not MENU
 x_fundo = 0
 y_fundo = - DESLOCA_MAPA_VERTICAL
-# dir_correta = [('ESQUERDA', 'ESQUERDA', 'ESQUERDA'), ('DIREITA', 'DIREITA', 'DIREITA'),
-#                ('ESQUERDA', 'DIREITA', 'ESQUERDA'), ('DIREITA', 'ESQUERDA', 'DIREITA')]    # direcoes corretas de cada calabouço
-
 dir_correta = ['ESQUERDA', 'ESQUERDA', 'ESQUERDA',
                'DIREITA', 'DIREITA', 'DIREITA',
                'ESQUERDA', 'DIREITA', 'ESQUERDA',
@@ -36,8 +34,8 @@ volta_inicio = True
 entrou_sala_item = False
 entrou_sala_inimigo = False
 entrou_sala_armadilha = False
-item_da_vez = itens['labirinto_orc'][0]
-ultimo_objeto_colidido = itens['labirinto_orc'][0]
+item_da_vez = itens1['labirinto_orc'][0]
+ultimo_objeto_colidido = itens1['labirinto_orc'][0]
 
 
 # ------ variaveis do inventario ------
@@ -96,8 +94,8 @@ def verifica_entrou_sala_item():
         labirinto = 'labirinto_dragao'
     
     if labirinto:
-        item_da_vez = itens[labirinto][random.randint(0,len(itens[labirinto])-1)]
-        itens[labirinto].remove(item_da_vez)
+        item_da_vez = itens1[labirinto][random.randint(0,len(itens1[labirinto])-1)]
+        itens1[labirinto].remove(item_da_vez)
         entrou_sala_item = True
     
 
@@ -170,7 +168,7 @@ def movimenta_personagem(comandos):
     if comandos[pygame.K_UP]:
         p1.movimenta('c')
 
-        if sala_atual == 1:
+        if sala_atual == 0:
             if p1.y < 18:
                 p1.movimenta('b')
         else:
@@ -357,6 +355,15 @@ def jogar():
     global MENU, fluxo_jogo, bg_anterior, anima_label_pontos
     global ultimo_objeto_colidido, entrou_sala_inimigo, pontos
     
+    # criando a janela
+    pygame.init()
+    pygame.display.set_caption("Lost Kingdom")
+    janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+    
+    # variaveis de pontuação
+    fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
+    fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
+    
     direcoes = 'ESQUERDA' + ' '*20 + 'DIREITA'
     cor_labels = (255, 255, 255)
     posicao_msg = (100, 100)
@@ -395,8 +402,8 @@ def jogar():
                 p1.y_anterior = p1.y
                 movimenta_personagem(pygame.key.get_pressed())
                 
-                if p1.y <= LIM_SUPERIOR and fundo != sala_rei and sala_atual <= 1:
-                    atualiza_cenario()
+#                 if p1.y <= LIM_SUPERIOR and fundo != sala_rei and sala_atual <= 1:
+#                     atualiza_cenario()
                 
                 fundo = mapas[bg_atual]
                 
@@ -489,27 +496,17 @@ def jogar():
                 elif fluxo_jogo == 5:
                     janela.blit(msg_tutorial[fluxo_jogo-1], (130, 50))
                 elif fluxo_jogo == 6:
-                    janela.blit(msg_tutorial[fluxo_jogo-1], posicao_msg)
+                    janela.blit(msg_rei, posicao_msg)
+#                 elif fluxo_jo
             else:
                 menu_principal()
         else:
             janela.blit(abertura, (0,0))
         
         pygame.display.update()
+    
+    pygame.quit()
           
 
 if __name__ == '__main__':
-    # criando a janela
-    pygame.init()
-    pygame.display.set_caption("Lost Kingdom")
-    janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
-    
-    # variaveis de pontuação
-    pontos = 0
-    fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
-    fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
-    
     jogar()
-
-pygame.quit()
-    

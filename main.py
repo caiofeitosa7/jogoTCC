@@ -3,6 +3,7 @@ import time
 import itens
 import random
 import pygame
+import tutorial
 from gera_arquivos import limpa_resultados
 from formulario_inicial import form_inicio
 from formulario_final import form_final
@@ -14,8 +15,6 @@ import gera_arquivos
 troca_mapa = 0
 tempo_jogo = list()
 tempo_inicio_jogo = 0
-anima_label_pontos = 0
-label_pontos_demonstrativo = ''
 
 x_fundo = 0
 y_fundo = - DESLOCA_MAPA_VERTICAL
@@ -40,6 +39,12 @@ entrou_sala_armadilha = False
 item_da_vez = itens1['labirinto_orc'][0]
 ultimo_objeto_colidido = itens1['labirinto_orc'][0]
 itens_labirinto = itens1['labirinto_orc']
+
+
+# ------ variaveis de pontuação -------
+pontos = 84
+anima_label_pontos = 0
+label_pontos_demonstrativo = ''
 
 
 # ------ variaveis do inventario ------
@@ -389,7 +394,9 @@ def atualiza_cenario():
     verifica_entrou_sala_item()
     verifica_entrou_sala_inimigo()
     verifica_entrou_sala_armadilha()
-
+    
+    if sala_atual == 12:
+        fluxo_jogo += 1
 
 path_personagem = 'p1'
 
@@ -445,6 +452,9 @@ def jogar():
     global MENU, fluxo_jogo, bg_anterior, anima_label_pontos, tempo_jogo
     global ultimo_objeto_colidido, entrou_sala_inimigo, pontos
     global label_pontos_demonstrativo
+    
+    fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
+    fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
     
     direcoes = 'ESQUERDA' + ' '*20 + 'DIREITA'
     cor_labels = (255, 255, 255)
@@ -561,8 +571,6 @@ def jogar():
                 # --------------- fluxo de jogo ----------------
                 
                 if fluxo_jogo % 2 != 0:
-#                     if fluxo_jogo == 1:
-#                         janela.blit(msg_rei, posicao_msg)
                     if fluxo_jogo == 1:
                         janela.blit(msg_orc, posicao_msg)
                     elif fluxo_jogo == 3:
@@ -588,7 +596,9 @@ def jogar():
 #         print('personagem:', p1.x, p1.y)
         pygame.display.update()
         
-
+    pygame.quit()
+    
+    
 def formata_tempo(tempo_percorrido):
     minutos = int(tempo_percorrido) // 60
     segundos = int(tempo_percorrido) % 60
@@ -605,19 +615,15 @@ def formata_tempo(tempo_percorrido):
 if __name__ == '__main__':
     form_inicio()
     
+    # tutorial
+    tutorial.jogar()
+    
     # criando a janela
     pygame.init()
     pygame.display.set_caption("Lost Kingdom")
     janela = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
     
-    # variaveis de pontuação
-    pontos = 84
-    fonte_pontos = pygame.font.SysFont(FONT, FONT_SIZE, True, True)
-    fonte_dir = pygame.font.SysFont(FONT, FONT_SIZE - 4, True, True)
-    
     jogar()
-    
-    pygame.quit()
     
     tempo_jogo = [formata_tempo(tempo) for tempo in tempo_jogo]
     gera_arquivos.arquivo_analise(dir_correta, dir_jogador, tempo_jogo)
