@@ -26,42 +26,46 @@ abertura = pygame.image.load(r'assets\menu\abertura.png')
 
 # --------------------- Carregando sons -------------------------
 path = r'assets\sounds\\'
-audio_click = pygame.mixer.Sound(path + r"Click.mp3")
-audio_inicioJogo = pygame.mixer.Sound(path + r"inicioJogo.wav")
-audio_decrease = pygame.mixer.Sound(path + r"Decrease.mp3")
-audio_armadilha = pygame.mixer.Sound(path + r"Armadilha.wav")
-audio_passarinho = pygame.mixer.Sound(path + r"passarinho.wav")
-audio_addItem = pygame.mixer.Sound(path + r"inicioJogo.wav")
-audio_pontua = pygame.mixer.Sound(path + r"pontua.wav")
+audio_click = pygame.mixer.Sound(path + "Click.mp3")
+audio_inicioJogo = pygame.mixer.Sound(path + "inicioJogo.wav")
+audio_decrease = pygame.mixer.Sound(path + "Decrease.mp3")
+audio_armadilha = pygame.mixer.Sound(path + "Armadilha.wav")
+audio_passarinho = pygame.mixer.Sound(path + "passarinho.wav")
+audio_addItem = pygame.mixer.Sound(path + "inicioJogo.wav")
+audio_pontua = pygame.mixer.Sound(path + "pontua.wav")
 
 
 # -------------------- Carregando mensagens ---------------------
-path = r'assets\mensagens'
-msg_rei = pygame.image.load(path + r'\msgRei.png')
-msg_atacado = pygame.image.load(path + r'\msgAtacado.png')
-msg_form_final = pygame.image.load(path + r'\msgFormFinal.png')
-msg_nao_encontrou = pygame.image.load(path + r'\msg_encontrou_nada.jpg')
-msg_armadilha = pygame.image.load(path + r'\msg_armadilha.jpg')
-msg_dragao = pygame.image.load(path + r'\popDragao.png')
-msg_ogro = pygame.image.load(path + r'\popOgro.png')
-msg_orc = pygame.image.load(path + r'\popOrc.png')
+path = r'assets\mensagens\\'
+msg_rei = pygame.image.load(path + 'msgRei.png')
+msg_atacado = pygame.image.load(path + 'msgAtacado.png')
+msg_form_final = pygame.image.load(path + 'msgFormFinal.png')
+msg_nao_encontrou = pygame.image.load(path + 'msg_encontrou_nada.jpg')
+msg_armadilha = pygame.image.load(path + 'msg_armadilha.jpg')
+msg_dragao = pygame.image.load(path + 'popDragao.png')
+msg_ogro = pygame.image.load(path + 'popOgro.png')
+msg_orc = pygame.image.load(path + 'popOrc.png')
 
-msg_cotaMitril = pygame.image.load(path + r'\msgCotaMitril.jpg')
-msg_capacete = pygame.image.load(path + r'\msgCapacete.jpg')
-msg_broquel = pygame.image.load(path + r'\msgBroquel.jpg')
-msg_espada_lunar = pygame.image.load(path + r'\msgEspadaLunar.jpg')
-msg_manopla = pygame.image.load(path + r'\msgManopla.jpg')
-msg_botas = pygame.image.load(path + r'\msgBotas.jpg')
-msg_esfera = pygame.image.load(path + r'\msgEsfera.jpg')
-msg_tacape = pygame.image.load(path + r'\msgTacape.jpg')
-msg_moedas = pygame.image.load(path + r'\msgMoedas.jpg')
-msg_flexa = pygame.image.load(path + r'\msgFlexa.jpg')
-msg_cajado_mago = pygame.image.load(path + r'\msgCajadoMago.jpg')
-msg_espada_vorpal = pygame.image.load(path + r'\msgEspadaVorpal.jpg')
+msg_cotaMitril = pygame.image.load(path + 'msgCotaMitril.jpg')
+msg_capacete = pygame.image.load(path + 'msgCapacete.jpg')
+msg_broquel = pygame.image.load(path + 'msgBroquel.jpg')
+msg_espada_lunar = pygame.image.load(path + 'msgEspadaLunar.jpg')
+msg_manopla = pygame.image.load(path + 'msgManopla.jpg')
+msg_botas = pygame.image.load(path + 'msgBotas.jpg')
+msg_esfera = pygame.image.load(path + 'msgEsfera.jpg')
+msg_tacape = pygame.image.load(path + 'msgTacape.jpg')
+msg_moedas = pygame.image.load(path + 'msgMoedas.jpg')
+msg_flexa = pygame.image.load(path + 'msgFlexa.jpg')
+msg_cajado_mago = pygame.image.load(path + 'msgCajadoMago.jpg')
+msg_espada_vorpal = pygame.image.load(path + 'msgEspadaVorpal.jpg')
+
+files = [file for file in os.listdir(path) if file.startswith('titulo')]
+msg_titulo_rei = [pygame.image.load(path + file) for file in sorted(files)]
 
 caminho = r'assets\msg_tutorial\\'
 files = os.listdir(caminho)
 msg_tutorial = [pygame.image.load(caminho + file) for file in sorted(files)]
+
 
 # -------------------- Carregando itens -------------------------
 path = r'assets\itens\\'

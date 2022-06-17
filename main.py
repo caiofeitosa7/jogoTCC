@@ -4,7 +4,6 @@ import itens
 import random
 import pygame
 import tutorial
-from gera_arquivos import limpa_resultados
 from formulario_inicial import form_inicio
 from formulario_final import form_final
 from jogador import Personagem
@@ -21,10 +20,6 @@ y_fundo = - DESLOCA_MAPA_VERTICAL
 dir_correta = ['ESQUERDA', 'ESQUERDA', 'ESQUERDA',
                'DIREITA', 'DIREITA', 'DIREITA',
                'ESQUERDA', 'DIREITA', 'ESQUERDA',
-               'DIREITA', 'ESQUERDA', 'DIREITA',
-               'ESQUERDA', 'ESQUERDA', 'ESQUERDA',
-               'DIREITA', 'DIREITA', 'DIREITA',
-               'ESQUERDA', 'DIREITA', 'ESQUERDA',
                'DIREITA', 'ESQUERDA', 'DIREITA']
 dir_jogador = []                      # direcao que o jogador seguiu em cada sala
 sala_atual = len(dir_jogador)         # em que sala o personagem está
@@ -32,13 +27,14 @@ bg_atual = 0                          # background atual
 bg_anterior = -1
 fluxo_jogo = 0
 fundo = mapas[bg_atual]
-volta_inicio = True
 entrou_sala_item = False
 entrou_sala_inimigo = False
 entrou_sala_armadilha = False
 item_da_vez = itens1['labirinto_orc'][0]
 ultimo_objeto_colidido = itens1['labirinto_orc'][0]
 itens_labirinto = itens1['labirinto_orc']
+tempo_ultima_condicao = 0
+titulo_honra = ''
 
 
 # ------ variaveis de pontuação -------
@@ -285,10 +281,10 @@ def pontua():
 
 # manipula o cenario do jogo
 def gerencia_mapa():
-    global troca_mapa, dir_jogador, y_fundo, x_fundo, volta_inicio
+    global troca_mapa, dir_jogador, y_fundo, x_fundo
     global DESLOCA_MAPA, bg_atual, fluxo_jogo, bg_anterior
     global sala_atual, DESLOCA_MAPA_VERTICAL
-    global inimigo, itens_labirinto, tempo_jogo, pontos
+    global inimigo, itens_labirinto, tempo_jogo, pontos, tempo_ultima_condicao
     
     if escolheu_direita():
         dir_jogador.append('DIREITA')
@@ -329,9 +325,6 @@ def gerencia_mapa():
         x_fundo = 0
         y_fundo = - DESLOCA_MAPA_VERTICAL
         
-        tempo_jogo.append(time.time() - tempo_jogo[-1])
-        tempo_jogo.append(time.time() - tempo_inicio_jogo)
-        
     if troca_mapa == 3:
         x_fundo = 0
         y_fundo = - DESLOCA_MAPA_VERTICAL
@@ -339,18 +332,18 @@ def gerencia_mapa():
         bg_anterior = bg_atual
         bg_atual += 1
         p1.x = pos_inicial[0]
-    
+            
     if sala_atual == 11 and fluxo_jogo != 12:
         fluxo_jogo += 1
         sala_atual = -1
         bg_atual = 0
         
-        print(sala_atual, fluxo_jogo)
-        
         if not tempo_jogo:
-            tempo_jogo.append(time.time() - tempo_inicio_jogo)
+            tempo_jogo.append(int(time.time()) - tempo_inicio_jogo)
         else:
-            tempo_jogo.append(time.time() - tempo_jogo[-1])
+            tempo_jogo.append(int(time.time()) - tempo_ultima_condicao)
+        
+        tempo_ultima_condicao = tempo_jogo[-1]
             
         if fluxo_jogo <= 5:
             itens = itens1
@@ -372,19 +365,30 @@ def gerencia_mapa():
                              y = LIM_SUPERIOR + 40,
                              largura = 32, altura = 65,
                              path = r'assets\Personagens\ogro')
-            
-        else:
+        elif fluxo_jogo == 5 or fluxo_jogo == 9:
             pontos = 138
             itens_labirinto = itens['labirinto_dragao']
             inimigo = Personagem(x = LIM_LATERAL/2 - 30,
                              y = LIM_SUPERIOR + 40,
                              largura = 60, altura = 50,
                              path = r'assets\Personagens\dragao')
+    
         
-        
+# define titulo de honra recebido no final
+def define_titulo():
+    if pontos < 57:
+        return msg_titulo_rei[0]
+    elif pontos >= 57 and pontos < 84:
+        return msg_titulo_rei[1]
+    elif pontos >= 84 and pontos < 111:
+        return msg_titulo_rei[2]
+    else:
+        return msg_titulo_rei[3]
+
+
 # muda para a próxima sala
 def atualiza_cenario():
-    global sala_atual, troca_mapa
+    global sala_atual, troca_mapa, titulo_honra, fluxo_jogo
     
     pontua()
     troca_mapa += 1
@@ -397,6 +401,10 @@ def atualiza_cenario():
     
     if sala_atual == 12:
         fluxo_jogo += 1
+        titulo_honra = define_titulo()
+        tempo_jogo.append(int(time.time()) - tempo_ultima_condicao)
+#         tempo_jogo.append(time.time() - tempo_inicio_jogo)
+
 
 path_personagem = 'p1'
 
@@ -424,10 +432,10 @@ def botao_clicado_menu():
             audio_click.play()
             path_personagem = 'p4'
             
-    if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):
+    if (y >= 293 and y <= 324) and (x >= 297 and x <= 407):   # botao iniciar
         MENU = False
         audio_inicioJogo.play()
-        tempo_inicio_jogo = time.time()
+        tempo_inicio_jogo = int(time.time())
         p1 = Personagem(x = pos_inicial[0], y = pos_inicial[1], altura = 48, largura = 35, \
                         path = 'assets\Personagens\\' + path_personagem)
 
@@ -480,6 +488,13 @@ def jogar():
                 elif event.key == pygame.K_RETURN:
                     if bg_anterior != bg_atual:
                         fluxo_jogo += 1
+                        
+                        if fluxo_jogo >= 13:
+                            fluxo_jogo += 1
+                            
+                        if fluxo_jogo == 17:
+                            rodando = False
+                            
                     elif p1.colidiu_objeto:
                         p1.colidiu_objeto = False
                 
@@ -546,10 +561,8 @@ def jogar():
                 
                 # ------------------- labels ------------------
                 
-                label = f'Pontos:{pontos}'
-                label_pontos = fonte_pontos.render(label, True, cor_labels)
-
-                janela.blit(label_pontos, (LIM_LATERAL + 30, LIM_SUPERIOR + 30))
+                label_pontos = fonte_pontos.render(f'Pontos:{pontos}', True, cor_labels)
+                janela.blit(label_pontos, (LIM_LATERAL + 20, LIM_SUPERIOR + 30))
                 
                 if p1.y <= LIM_SUPERIOR + 90 and sala_atual != 12:
                     label_direcoes = fonte_dir.render(direcoes, True, (255, 255, 255))
@@ -560,11 +573,11 @@ def jogar():
                 
                 label_pontua = fonte_pontos.render(label_pontos_demonstrativo, True, cor_labels)
                 
-                if anima_label_pontos != 0 and anima_label_pontos >= -60:
+                if anima_label_pontos != 0 and anima_label_pontos >= -70:
                     janela.blit(label_pontua, (LIM_LATERAL//2, HEIGHT//2 - 20 + anima_label_pontos))
                     anima_label_pontos -= 7
                 
-                if anima_label_pontos <= -60:
+                if anima_label_pontos <= -70:
                     anima_label_pontos = 0
                 
                 
@@ -584,24 +597,22 @@ def jogar():
                     elif fluxo_jogo == 11:
                         janela.blit(msg_orc, posicao_msg)
                     elif fluxo_jogo == 13:
+                        janela.blit(titulo_honra, posicao_msg)
+                    elif fluxo_jogo == 15:
                         janela.blit(msg_form_final, posicao_msg)
             else:
                 menu_principal()
         else:
             janela.blit(abertura, (0,0))
         
-        
-        
-        
-#         print('personagem:', p1.x, p1.y)
         pygame.display.update()
         
     pygame.quit()
     
     
 def formata_tempo(tempo_percorrido):
-    minutos = int(tempo_percorrido) // 60
     segundos = int(tempo_percorrido) % 60
+    minutos = (int(tempo_percorrido) - segundos) // 60
     
     if minutos < 10:
         minutos = f'0{minutos}'
@@ -610,9 +621,36 @@ def formata_tempo(tempo_percorrido):
         segundos = f'0{segundos}'
     
     return f'{minutos}:{segundos}'
+
+
+# def formata_tempo(tempo_jogo):
+#     tempos_formatados = list()
+#     
+#     for i, tempo in enumerate(tempo_jogo[1:-1]):
+#         tempo_jogo[i] = tempo - tempo_jogo[i-1]
+#     
+#     for tempo in tempo_jogo:
+#         segundos = int(tempo) % 60
+#         minutos = (int(tempo) - segundos) // 60
+# 
+#         if minutos < 10:
+#             minutos = f'0{minutos}'
+#         
+#         if segundos < 10:
+#             segundos = f'0{segundos}'
+#     
+#         tempos_formatados.append(f'{minutos}:{segundos}')
+#         
+#     return tempos_formatados
     
 
 if __name__ == '__main__':
+    direcoes = list()
+    tempos = list()
+    
+    for i in range(6):
+        direcoes += dir_correta
+    
     form_inicio()
     
     # tutorial
@@ -625,8 +663,13 @@ if __name__ == '__main__':
     
     jogar()
     
-    tempo_jogo = [formata_tempo(tempo) for tempo in tempo_jogo]
-    gera_arquivos.arquivo_analise(dir_correta, dir_jogador, tempo_jogo)
+    with open('tempos-codicao.txt', 'w') as arq:
+        for i in range(1, len(tempo_jogo)):
+            arq.write(str(tempo_jogo[i]) + '\n')
+    
+#     tempo_jogo = [formata_tempo(tempo) for tempo in tempo_jogo]
+#     tempo_jogo = formata_tempo(tempos)
+    gera_arquivos.arquivo_analise(direcoes, dir_jogador, tempo_jogo)
     
     form_final()
     

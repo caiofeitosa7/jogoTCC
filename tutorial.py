@@ -372,7 +372,7 @@ def jogar():
     
     while rodando:
         pygame.time.delay(DELAY)
-            
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 rodando = False
@@ -497,7 +497,7 @@ def jogar():
                     janela.blit(msg_tutorial[fluxo_jogo-1], (130, 50))
                 elif fluxo_jogo == 6:
                     janela.blit(msg_rei, posicao_msg)
-#                 elif fluxo_jo
+                    
             else:
                 menu_principal()
         else:
