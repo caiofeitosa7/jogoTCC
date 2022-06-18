@@ -12,10 +12,11 @@ def limpa_resultados():
         os.remove(path + arquivo)
     
 
-def arquivo_analise(direcoes_corretas: list, direcoes_personagem: list, tempo_gasto):
-    dir_corretas = pd.DataFrame({'DIRECOES_CORRETAS': direcoes_corretas})
-    dir_personagem = pd.DataFrame({'DIRECOES_ESCOLHIDAS': direcoes_personagem})
-    tempo_jogo = pd.DataFrame({'TEMPO_DE_JOGO': tempo_gasto})
+def arquivo_analise(direcoes_corretas: list, direcoes_personagem: list, tempo_gasto: list, sequencia_condicoes: list):
+    dir_corretas = pd.DataFrame({'DIRECOES CORRETAS': direcoes_corretas})
+    dir_personagem = pd.DataFrame({'DIRECOES ESCOLHIDAS': direcoes_personagem})
+    condicoes = pd.DataFrame({'CONDICAO': sequencia_condicoes})
+    tempo_jogo = pd.DataFrame({'TEMPO': tempo_gasto})
     
     writer = pd.ExcelWriter(f'{path}analise_jogo.xlsx', engine='openpyxl')
     
@@ -28,11 +29,18 @@ def arquivo_analise(direcoes_corretas: list, direcoes_personagem: list, tempo_ga
         startcol = dir_corretas.shape[1] + 1
     )
     
-    tempo_jogo.to_excel(
+    condicoes.to_excel(
         writer,
         index=False,
         sheet_name='Análise do Jogador',
         startcol = dir_corretas.shape[1] + dir_personagem.shape[1] + 2
+    )
+    
+    tempo_jogo.to_excel(
+        writer,
+        index=False,
+        sheet_name='Análise do Jogador',
+        startcol = dir_corretas.shape[1] + dir_personagem.shape[1] + condicoes.shape[1] + 2
     )
 
     writer.close()

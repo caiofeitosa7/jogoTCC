@@ -345,7 +345,7 @@ def gerencia_mapa():
         else:
             itens = itens2
         
-        if fluxo_jogo == 1 or fluxo_jogo == 11:
+        if fluxo_jogo == 1 or fluxo_jogo == 11:    # --- condicao A --- #
             pontos = 84
             itens_labirinto = itens['labirinto_orc']
             inimigo = Personagem(x = LIM_LATERAL/2 + 30,
@@ -353,14 +353,15 @@ def gerencia_mapa():
                              largura = 28, altura = 57,
                              path = r'assets\Personagens\orc')
             
-        elif fluxo_jogo == 3 or fluxo_jogo == 7:
+        elif fluxo_jogo == 5 or fluxo_jogo == 9:    # --- condicao B --- #
             pontos = 30
             itens_labirinto = itens['labirinto_ogro']
             inimigo = Personagem(x = LIM_LATERAL/2 - 30,
                              y = LIM_SUPERIOR + 40,
                              largura = 32, altura = 65,
                              path = r'assets\Personagens\ogro')
-        elif fluxo_jogo == 5 or fluxo_jogo == 9:
+            
+        elif fluxo_jogo == 3 or fluxo_jogo == 7:    # --- condicao C --- #
             pontos = 138
             itens_labirinto = itens['labirinto_dragao']
             inimigo = Personagem(x = LIM_LATERAL/2 - 30,
@@ -581,13 +582,13 @@ def jogar():
                     if fluxo_jogo == 1:
                         janela.blit(msg_orc, posicao_msg)
                     elif fluxo_jogo == 3:
-                        janela.blit(msg_ogro, posicao_msg)
+                        janela.blit(msg_dragao, posicao_msg)
                     elif fluxo_jogo == 5:
-                        janela.blit(msg_dragao, posicao_msg)
-                    elif fluxo_jogo == 7:
                         janela.blit(msg_ogro, posicao_msg)
-                    elif fluxo_jogo == 9:
+                    elif fluxo_jogo == 7:
                         janela.blit(msg_dragao, posicao_msg)
+                    elif fluxo_jogo == 9:
+                        janela.blit(msg_ogro, posicao_msg)
                     elif fluxo_jogo == 11:
                         janela.blit(msg_orc, posicao_msg)
                     elif fluxo_jogo == 13:
@@ -640,7 +641,7 @@ if __name__ == '__main__':
         tempos.append(tempo_jogo[i] - tempo_jogo[i-1])
         
     tempos = [formata_tempo(tempo) for tempo in tempos]
-    gera_arquivos.arquivo_analise(direcoes, dir_jogador, tempos, list('ABCBCA'))
+    gera_arquivos.arquivo_analise(direcoes, dir_jogador, tempos, list('ACBCBA'))
     
     form_final()
     
